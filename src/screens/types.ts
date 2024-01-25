@@ -1,10 +1,17 @@
+export interface EmployeeNodeProps {
+  node: EmployeeData;
+  index: number;
+}
+
 export interface EmployeeData {
   name: string;
   id: string;
-  phoneNumber: string;
-  email: string;
-  department: string;
-  team: string;
+  phoneNumber?: string;
+  department?: string;
+  team?: string;
+  position: string;
+  children?: EmployeeData[];
+  email?: string;
 }
 
 export const initialEmployeeData: EmployeeData = {
@@ -14,4 +21,5 @@ export const initialEmployeeData: EmployeeData = {
   email: '',
   department: '',
   team: '',
+  position: '',
 };

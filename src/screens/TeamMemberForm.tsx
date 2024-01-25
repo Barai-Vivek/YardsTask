@@ -3,8 +3,12 @@ import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import {departments, teams} from '../Constants';
 import {EmployeeData, initialEmployeeData} from './types';
+import {useDispatch} from 'react-redux';
+import { addEmployee } from '../redux';
 
 const TeamMemberForm = () => {
+  const dispatch = useDispatch();
+
   const [employeeData, setEmployeeData] =
     useState<EmployeeData>(initialEmployeeData);
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(
@@ -19,6 +23,8 @@ const TeamMemberForm = () => {
   const handleAddTeamMember = () => {
     // Implement logic to add the team member
     console.log('Adding team member:', employeeData);
+    dispatch(addEmployee(employeeData))
+    console.log('Added team member:', employeeData);
 
     // Reset the form after adding the team member
     setEmployeeData(initialEmployeeData);

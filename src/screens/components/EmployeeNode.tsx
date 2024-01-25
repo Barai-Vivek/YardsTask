@@ -1,7 +1,7 @@
 import React from 'react';
-import {EmployeeNodeProps} from './types';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
 import {moderateScale} from '../../Constants';
+import {EmployeeNodeProps} from '../types';
 
 const EmployeeNode = ({node, index}: EmployeeNodeProps) => {
   return (
