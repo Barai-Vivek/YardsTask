@@ -9,7 +9,7 @@ export interface EmployeeData {
   phoneNumber?: string;
   department?: string;
   team?: string;
-  position: string;
+  role: string;
   children?: EmployeeData[];
   email?: string;
 }
@@ -21,5 +21,6 @@ export const initialEmployeeData: EmployeeData = {
   email: '',
   department: '',
   team: '',
-  position: '',
+  role: '',
+  children: [],
 };

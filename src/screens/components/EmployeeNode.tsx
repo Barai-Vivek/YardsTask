@@ -1,19 +1,21 @@
 import React from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {moderateScale} from '../../Constants';
 import {EmployeeNodeProps} from '../types';
 
 const EmployeeNode = ({node, index}: EmployeeNodeProps) => {
   return (
     <View style={index === 0 ? styles.nodeTop : styles.node}>
-      <Text style={styles.label}>
-        {node.position}: {node.name}
-      </Text>
+      <TouchableOpacity>
+        <Text style={styles.label}>
+          {node.role}: {node.name}
+        </Text>
+      </TouchableOpacity>
       {node.children && (
         <View style={styles.children}>
           <FlatList
             data={node.children}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(_, index) => index.toString()}
             renderItem={({item, index}) => (
               <EmployeeNode node={item} index={index} />
             )}

@@ -1,5 +1,5 @@
 import {Dimensions} from 'react-native';
-import { EmployeeData } from '.';
+import {EmployeeData} from '.';
 export const {width, height} = Dimensions.get('screen');
 
 const guidelineBaseWidth: number = 375;
@@ -15,171 +15,104 @@ const [shortDimension] = width < height ? [width, height] : [height, width];
 export const moderateScale = (size: number, factor: number = 0.1): number =>
   Math.round(size + (scale(size) - size) * factor);
 
-export const employeeData: EmployeeData[] = [
+export enum DEPARTMENT {
+  STAFF_HR = 'staff/HR',
+  ENGINEERING = 'Engineering',
+  DESIGN = 'Design',
+}
+export const departments: string[] = [
+  DEPARTMENT.STAFF_HR,
+  DEPARTMENT.ENGINEERING,
+  DEPARTMENT.DESIGN,
+];
+
+export enum ROLE {
+  CEO = 'CEO',
+  TEAM = 'TEAM',
+  HEAD = 'HEAD',
+  TEAM_LEADER = 'TEAM LEADER',
+  TEAM_MEMBER = 'TEAM MEMBER',
+}
+
+export const roles: string[] = [ROLE.TEAM_LEADER, ROLE.TEAM_MEMBER];
+
+export const defaultEmployees: EmployeeData[] = [
   {
-    position: 'CEO',
+    role: ROLE.CEO,
     name: 'Company CEO',
-    email: '',
-    phoneNumber: '',
-    id: '',
-    department: 'CEO',
-    team: '',
+    email: 'ceo@company.com',
+    phoneNumber: '1234567890',
+    id: '1',
     children: [
       {
-        position: 'Head of staff/HR',
-        name: 'Name of HR',
-        email: '',
-        phoneNumber: '',
-        id: '',
-        department: 'staff/HR',
-        team: '',
+        role: ROLE.HEAD,
+        name: 'Name of staff/HR head',
+        email: 'hr@company.com',
+        phoneNumber: '3434534232',
+        id: '2',
+        department: DEPARTMENT.STAFF_HR,
         children: [
           {
-            position: 'Team 1',
-            name: 'Name of Team 1',
-            id: '',
-            department: 'staff/HR',
-            team: 'Team 1',
-            children: [
-              {
-                position: 'Team Leader',
-                name: 'Name of Team leader',
-                email: '',
-                phoneNumber: '',
-                id: '',
-                department: 'staff/HR',
-                team: 'Team 1',
-                children: [
-                  {
-                    position: 'Team member',
-                    name: 'Name of Team member',
-                    email: '',
-                    phoneNumber: '',
-                    id: '',
-                    department: 'staff/HR',
-                    team: 'Team 1',
-                  },
-                  {
-                    position: 'Team member',
-                    name: 'Name of Another Team member',
-                    email: '',
-                    phoneNumber: '',
-                    id: '',
-                    department: 'staff/HR',
-                    team: 'Team 1',
-                  },
-                ],
-              },
-            ],
+            role: ROLE.TEAM,
+            name: 'Team 1',
+            id: '3',
+            department: DEPARTMENT.STAFF_HR,
+            children: [],
           },
           {
-            position: 'Team 2',
-            name: 'Name of Team 2',
-            id: '',
-            department: 'staff/HR',
-            team: 'Team 2',
-            children: [
-              {
-                position: 'Team Leader',
-                name: 'Name of Team leader',
-                email: '',
-                phoneNumber: '',
-                id: '',
-                department: 'staff/HR',
-                team: 'Team 2',
-                children: [
-                  {
-                    position: 'Team member',
-                    name: 'Name of Team member',
-                    email: '',
-                    phoneNumber: '',
-                    id: '',
-                    department: 'staff/HR',
-                    team: 'Team 2',
-                  },
-                ],
-              },
-            ],
+            role: ROLE.TEAM,
+            name: 'Team 2',
+            id: '4',
+            department: DEPARTMENT.STAFF_HR,
+            children: [],
           },
         ],
       },
       {
-        position: 'Head of engineering',
+        role: ROLE.HEAD,
         name: 'Name of engineering head',
-        email: '',
-        phoneNumber: '',
-        id: '',
-        department: 'Engineering',
-        team: '',
+        email: 'engineerhead@company.com',
+        phoneNumber: '324254',
+        id: '5',
+        department: DEPARTMENT.ENGINEERING,
         children: [
           {
-            position: 'Team 3',
-            name: 'Name of Team 3',
-            id: '',
-            department: 'Engineering',
-            team: 'Team 3',
-            children: [
-              {
-                position: 'Team Leader',
-                name: 'Name of Team leader',
-                email: '',
-                phoneNumber: '',
-                id: '',
-                department: 'Engineering',
-                team: 'Team 3',
-                children: [
-                  {
-                    position: 'Team member',
-                    name: 'Name of Team member',
-                    email: '',
-                    phoneNumber: '',
-                    id: '',
-                    department: 'Engineering',
-                    team: 'Team 3',
-                  },
-                ],
-              },
-            ],
+            role: ROLE.TEAM,
+            name: 'Team A',
+            id: '6',
+            department: DEPARTMENT.ENGINEERING,
+            children: [],
+          },
+          {
+            role: ROLE.TEAM,
+            name: 'Team B',
+            id: '7',
+            department: DEPARTMENT.ENGINEERING,
+            children: [],
           },
         ],
       },
       {
-        position: 'Head of design',
+        role: ROLE.HEAD,
         name: 'Name of design head',
-        email: '',
-        phoneNumber: '',
-        id: '',
-        department: 'Design',
-        team: '',
+        email: 'designhead@company.com',
+        phoneNumber: '32432452',
+        id: '8',
+        department: DEPARTMENT.DESIGN,
         children: [
           {
-            position: 'Team 4',
-            name: 'Team name 4',
-            id: '',
-            department: 'Design',
-            team: 'Team 4',
-            children: [
-              {
-                position: 'Team Leader',
-                name: 'Team leader name',
-                email: '',
-                phoneNumber: '',
-                id: '',
-                department: 'Design',
-                team: 'Team 4',
-                children: [
-                  {
-                    position: 'Team member',
-                    name: 'Name of Team member',
-                    email: '',
-                    phoneNumber: '',
-                    id: '',
-                    department: 'Design',
-                    team: 'Team 4',
-                  },
-                ],
-              },
-            ],
+            role: ROLE.TEAM,
+            name: 'Team X',
+            id: '9',
+            department: DEPARTMENT.DESIGN,
+            children: [],
+          },
+          {
+            role: ROLE.TEAM,
+            name: 'Team Y',
+            id: '10',
+            department: DEPARTMENT.DESIGN,
+            children: [],
           },
         ],
       },
@@ -187,10 +120,174 @@ export const employeeData: EmployeeData[] = [
   },
 ];
 
-export const departments = ['HR', 'Engineering', 'Design'];
-
-export const teams: {[key: string]: string[]} = {
-  HR: ['Team 1', 'Team 2'],
-  Engineering: ['Team A', 'Team B'],
-  Design: ['Team X', 'Team Y'],
-};
+// export const employeeData: EmployeeData[] = [
+//   {
+//     role: 'CEO',
+//     name: 'Company CEO',
+//     email: 'ceo@company.com',
+//     phoneNumber: '1234567890',
+//     id: '1',
+//     department: 'CEO',
+//     team: '',
+//     children: [
+//       {
+//         role: 'Head of staff/HR',
+//         name: 'Name of HR',
+//         email: '',
+//         phoneNumber: '',
+//         id: '',
+//         department: DEPARTMENT.STAFF_HR,
+//         team: '',
+//         children: [
+//           {
+//             role: 'Team 1',
+//             name: 'Name of Team 1',
+//             id: '',
+//             department: DEPARTMENT.STAFF_HR,
+//             team: 'Team 1',
+//             children: [
+//               {
+//                 role: 'Team Leader',
+//                 name: 'Name of Team leader',
+//                 email: '',
+//                 phoneNumber: '',
+//                 id: '',
+//                 department: DEPARTMENT.STAFF_HR,
+//                 team: 'Team 1',
+//                 children: [
+//                   {
+//                     role: 'Team member',
+//                     name: 'Name of Team member',
+//                     email: '',
+//                     phoneNumber: '',
+//                     id: '',
+//                     department: DEPARTMENT.STAFF_HR,
+//                     team: 'Team 1',
+//                   },
+//                   {
+//                     role: 'Team member',
+//                     name: 'Name of Another Team member',
+//                     email: '',
+//                     phoneNumber: '',
+//                     id: '',
+//                     department: DEPARTMENT.STAFF_HR,
+//                     team: 'Team 1',
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//           {
+//             role: 'Team 2',
+//             name: 'Name of Team 2',
+//             id: '',
+//             department: DEPARTMENT.STAFF_HR,
+//             team: 'Team 2',
+//             children: [
+//               {
+//                 role: 'Team Leader',
+//                 name: 'Name of Team leader',
+//                 email: '',
+//                 phoneNumber: '',
+//                 id: '',
+//                 department: DEPARTMENT.STAFF_HR,
+//                 team: 'Team 2',
+//                 children: [
+//                   {
+//                     role: 'Team member',
+//                     name: 'Name of Team member',
+//                     email: '',
+//                     phoneNumber: '',
+//                     id: '',
+//                     department: DEPARTMENT.STAFF_HR,
+//                     team: 'Team 2',
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//       {
+//         role: 'Head of engineering',
+//         name: 'Name of engineering head',
+//         email: '',
+//         phoneNumber: '',
+//         id: '',
+//         department: DEPARTMENT.ENGINEERING,
+//         team: '',
+//         children: [
+//           {
+//             role: 'Team 3',
+//             name: 'Name of Team 3',
+//             id: '',
+//             department: DEPARTMENT.ENGINEERING,
+//             team: 'Team 3',
+//             children: [
+//               {
+//                 role: 'Team Leader',
+//                 name: 'Name of Team leader',
+//                 email: '',
+//                 phoneNumber: '',
+//                 id: '',
+//                 department: DEPARTMENT.ENGINEERING,
+//                 team: 'Team 3',
+//                 children: [
+//                   {
+//                     role: 'Team member',
+//                     name: 'Name of Team member',
+//                     email: '',
+//                     phoneNumber: '',
+//                     id: '',
+//                     department: DEPARTMENT.ENGINEERING,
+//                     team: 'Team 3',
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//       {
+//         role: 'Head of design',
+//         name: 'Name of design head',
+//         email: '',
+//         phoneNumber: '',
+//         id: '',
+//         department: DEPARTMENT.DESIGN,
+//         team: '',
+//         children: [
+//           {
+//             role: 'Team 4',
+//             name: 'Team name 4',
+//             id: '',
+//             department: DEPARTMENT.DESIGN,
+//             team: 'Team 4',
+//             children: [
+//               {
+//                 role: 'Team Leader',
+//                 name: 'Team leader name',
+//                 email: '',
+//                 phoneNumber: '',
+//                 id: '',
+//                 department: DEPARTMENT.DESIGN,
+//                 team: 'Team 4',
+//                 children: [
+//                   {
+//                     role: 'Team member',
+//                     name: 'Name of Team member',
+//                     email: '',
+//                     phoneNumber: '',
+//                     id: '',
+//                     department: DEPARTMENT.DESIGN,
+//                     team: 'Team 4',
+//                   },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//     ],
+//   },
+// ];

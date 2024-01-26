@@ -1,10 +1,18 @@
-import { configureStore } from "@reduxjs/toolkit"
-import teamReducer from "./teamSlice";
+import {configureStore} from '@reduxjs/toolkit';
+import {defaultEmployees} from '../Constants';
+import {teamReducer} from './teamSlice';
+
+const preloadedState = {
+  team: {
+    employees: defaultEmployees,
+  },
+};
 
 const store = configureStore({
-    reducer :{
-        team : teamReducer
-    }
+  reducer: {
+    team: teamReducer,
+  },
+  preloadedState,
 });
 
-export default store
+export default store;
