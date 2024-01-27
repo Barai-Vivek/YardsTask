@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useAppSelector} from '../redux/hook/useAppSelector';
-import {selectEmployeeData} from '../redux/selector';
-import {EmployeeComponent} from './components/EmployeeComponent';
+import {Images} from '../assets';
+import {selectEmployeeData, useAppSelector} from '../redux';
+import {EmployeeComponent} from './components';
 
 const FilteredEmployeesScreen = () => {
   const employeesData = useAppSelector(selectEmployeeData);
@@ -28,7 +28,7 @@ const FilteredEmployeesScreen = () => {
         {(searchText.length && (
           <TouchableOpacity onPress={() => setSearchText('')}>
             <Image
-              source={require('../assets/images/ic_clear.png')}
+              source={Images.icClear}
               tintColor={'grey'}
               style={{width: 24, height: 24, marginEnd: 8}}
             />

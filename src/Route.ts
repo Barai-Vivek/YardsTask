@@ -1,5 +1,5 @@
 import {RouteProp} from '@react-navigation/native';
-import {EmployeeData} from './screens/types';
+import {EmployeeData} from '.';
 
 export type AddTeamMemberParams = {
   employee?: EmployeeData;

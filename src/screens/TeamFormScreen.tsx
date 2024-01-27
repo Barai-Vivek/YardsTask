@@ -10,13 +10,13 @@ import {
 } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import {ROLE, generateUUID, departments, roles, TeamProps} from '..';
-import {hierarchyActions} from '../redux/hierachyRedux/hierarchySlice';
-import {useAppDispatch} from '../redux/hook/useAppDispatch';
-import {useAppSelector} from '../redux/hook/useAppSelector';
-import {memberActions} from '../redux/memberRedux/memberSlice';
-import {selectTeamData, selectTeamLeader} from '../redux/selector';
-import ToggleButton from './components/ToggleButton';
 import {EmployeeData, initialEmployeeData, TeamMemberDetails} from './types';
+import {
+  hierarchyActions,
+  selectTeamData,
+  useAppDispatch,
+  useAppSelector,
+} from '../redux';
 
 const TeamFormScreen = ({route}: TeamProps) => {
   const employee = route.params?.employee;

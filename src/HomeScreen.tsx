@@ -1,12 +1,15 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {HierarchyScreen, TeamMemberForm} from '.';
+import {
+  FilteredEmployeesScreen,
+  HierarchyScreen,
+  TeamFormScreen,
+  TeamMemberForm,
+} from '.';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationRoutes, TabStackParamList} from './Route';
 import {useNavigation} from '@react-navigation/native';
-import {AllMembersScreen} from './screens/AllMembersScreen';
-import {FilteredEmployeesScreen} from './screens/FilteredEmployeesScreen';
-import {TeamFormScreen} from './screens/TeamFormScreen';
+import {Images} from './assets';
 
 const Stack = createNativeStackNavigator<TabStackParamList>();
 
@@ -34,7 +37,7 @@ const HomeScreen = () => {
           headerRight: () => (
             <TouchableOpacity onPress={handleAddTeamMember}>
               <Image
-                source={require('./assets/images/ic_add.png')}
+                source={Images.icAdd}
                 tintColor={'white'}
                 style={{width: 30, height: 30, marginRight: 10}}
               />

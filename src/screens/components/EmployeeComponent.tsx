@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {ROLE, moderateScale} from '../../Constants';
+import {ROLE} from '../../Constants';
 import {EmployeeData, EmployeeProps} from '../types';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationRoutes} from '../../Route';
-import {useAppDispatch} from '../../redux/hook/useAppDispatch';
-import {hierarchyActions} from '../../redux/hierachyRedux/hierarchySlice';
+import {Images} from '../../assets';
+import {hierarchyActions, useAppDispatch} from '../../redux';
 
 const EmployeeComponent = ({
   employee,
@@ -92,7 +92,7 @@ const EmployeeComponent = ({
               <TouchableOpacity
                 onPress={() => navigateToScreenWithData(employee, index)}>
                 <Image
-                  source={require('../../assets/images/ic_edit.png')}
+                  source={Images.icEdit}
                   tintColor={'black'}
                   style={styles.imageSize}
                 />
@@ -101,7 +101,7 @@ const EmployeeComponent = ({
                 <TouchableOpacity
                   onPress={() => deleteTeamMember(employee, indexes)}>
                   <Image
-                    source={require('../../assets/images/ic_delete.png')}
+                    source={Images.icDelete}
                     tintColor={'black'}
                     style={styles.imageSize}
                   />
@@ -149,15 +149,15 @@ const styles = StyleSheet.create({
   },
   labelContainer: {
     borderWidth: 1,
-    borderRadius: moderateScale(4),
-    padding: moderateScale(6),
+    borderRadius: 4,
+    padding: 6,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   label: {
     fontSize: 18,
     borderColor: 'grey',
-    padding: moderateScale(6),
+    padding: 6,
   },
   children: {
     marginLeft: 16,

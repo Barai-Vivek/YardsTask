@@ -1,19 +1,4 @@
-import {Dimensions} from 'react-native';
 import {EmployeeData} from './screens/types';
-export const {width, height} = Dimensions.get('screen');
-
-const guidelineBaseWidth: number = 375;
-
-export const {width: screenWidth, height: screenHeight} =
-  Dimensions.get('screen');
-
-export const scale = (size: number): number =>
-  (shortDimension / guidelineBaseWidth) * size;
-
-const [shortDimension] = width < height ? [width, height] : [height, width];
-
-export const moderateScale = (size: number, factor: number = 0.1): number =>
-  Math.round(size + (scale(size) - size) * factor);
 
 export enum DEPARTMENT {
   STAFF_HR = 'staff/HR',

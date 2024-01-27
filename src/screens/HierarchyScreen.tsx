@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, Button} from 'react-native';
-import {selectEmployeeData} from '../redux/selector';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationRoutes} from '..';
-import {useAppSelector} from '../redux/hook/useAppSelector';
-import {EmployeeComponent} from './components/EmployeeComponent';
+import {EmployeeComponent} from './components';
+import {selectEmployeeData, useAppSelector} from '../redux';
 
 const HierarchyScreen = () => {
   const employeesData = useAppSelector(selectEmployeeData);

@@ -17,8 +17,6 @@ const {actions, reducer} = createSlice({
   reducers: {
     addMember: (state, action: PayloadAction<TeamMemberDetails>) => {
       const data = action.payload;
-      console.log({data});
-
       state.teamMemberDetails.push(action.payload);
     },
     editMember: (state, action: PayloadAction<TeamMemberDetails>) => {
