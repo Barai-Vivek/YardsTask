@@ -39,7 +39,6 @@ const EmployeeComponent = ({
     }
   };
 
-  // Define the function to navigate to another screen with data
   const deleteTeamMember = (item: EmployeeData, position: number[]) => {
     dispatch(
       hierarchyActions.deleteEmployeeByIndex({
@@ -47,6 +46,22 @@ const EmployeeComponent = ({
         indexes: position,
       }),
     );
+  };
+
+  const addTeam = (item: EmployeeData, position: number[]) => {
+    // Create a new object based on the original item, so you don't mutate the original object
+    const newTeam: EmployeeData = {
+      name: '',
+      id: '',
+      department: item.department,
+      role: ROLE.TEAM,
+    };
+
+    navigation.navigate(NavigationRoutes.TEAM_FORM, {
+      employee: newTeam,
+      indexes: indexes,
+      addTeam: true,
+    });
   };
 
   // Function to filter employees based on search query
@@ -97,6 +112,15 @@ const EmployeeComponent = ({
                   style={styles.imageSize}
                 />
               </TouchableOpacity>
+              {employee.role === ROLE.HEAD && (
+                <TouchableOpacity onPress={() => addTeam(employee, indexes)}>
+                  <Image
+                    source={Images.icAdd}
+                    tintColor={'black'}
+                    style={styles.imageSize}
+                  />
+                </TouchableOpacity>
+              )}
               {employee.role === ROLE.TEAM_MEMBER && (
                 <TouchableOpacity
                   onPress={() => deleteTeamMember(employee, indexes)}>

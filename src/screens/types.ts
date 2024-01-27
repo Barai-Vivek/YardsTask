@@ -28,19 +28,6 @@ export const initialEmployeeData: EmployeeData = {
   children: [],
 };
 
-export type TeamMemberDetails = {
-  id: string;
-  name: string;
-  phoneNumber?: string;
-  email?: string;
-  role?: string;
-};
-
-export type TeamMemberProp = {
-  member: TeamMemberDetails;
-  index: number;
-};
-
 export type UpdateEmployee = {
   employee: EmployeeData;
   indexes?: number[];

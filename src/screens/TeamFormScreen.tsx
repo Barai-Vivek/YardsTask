@@ -9,22 +9,28 @@ import {
   View,
 } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
-import {ROLE, generateUUID, departments, roles, TeamProps} from '..';
-import {EmployeeData, initialEmployeeData, TeamMemberDetails} from './types';
 import {
-  hierarchyActions,
-  selectTeamData,
-  useAppDispatch,
-  useAppSelector,
-} from '../redux';
+  ROLE,
+  generateUUID,
+  departments,
+  roles,
+  TeamProps,
+  ADD_TEAM,
+  EDIT_TEAM,
+} from '..';
+import {EmployeeData, initialEmployeeData} from './types';
+import {hierarchyActions, useAppDispatch} from '../redux';
 
 const TeamFormScreen = ({route}: TeamProps) => {
   const employee = route.params?.employee;
   const index = route.params?.indexes;
+  const addTeam = route.params?.addTeam;
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const title = typeof index === 'undefined' ? 'Add Team' : 'Edit Team';
+  console.log({index});
+
+  const title = addTeam ? ADD_TEAM : EDIT_TEAM;
 
   const [employeeData, setEmployeeData] = useState<EmployeeData>(
     employee ?? initialEmployeeData,
@@ -32,24 +38,17 @@ const TeamFormScreen = ({route}: TeamProps) => {
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(
     employee?.department ?? null,
   );
-  const [selectedRole, setSelectedRole] = useState<string | null>(
-    employee?.role ?? ROLE.TEAM,
-  );
-  const [selectedTeam, setSelectedTeam] = useState<string | null>(
-    employee?.team ?? null,
-  );
+  const selectedRole = ROLE.TEAM;
+  // const [selectedTeam, setSelectedTeam] = useState<string | null>(
+  //   employee?.team ?? null,
+  // );
 
   const [showError, setShowError] = useState(false);
   const [errMessage, setErrorMessage] = useState('');
 
-  // Selector to get teams based on selected department
-  const teamsForSelectedDepartment = useAppSelector(
-    selectTeamData(selectedDepartment ?? ''),
-  );
-
   useEffect(() => {
     setShowError(false);
-  }, [selectedTeam, selectedRole, selectedDepartment]);
+  }, [selectedRole, selectedDepartment]);
 
   const handleInputChange = (field: keyof EmployeeData, value: string) => {
     setShowError(false);
@@ -60,22 +59,14 @@ const TeamFormScreen = ({route}: TeamProps) => {
     setShowError(false);
     if (isFormValid()) {
       // Implement logic to add the team
-      if (typeof index === 'undefined') {
+      if (addTeam) {
         employeeData.id = generateUUID();
-        const teamMember: TeamMemberDetails = {
-          name: employeeData.name,
-          id: employeeData.id,
-          phoneNumber: employeeData.phoneNumber,
-          email: employeeData.email,
-          role: employeeData.role,
-        };
-
-        dispatch(hierarchyActions.addEmployee(employeeData));
-        // Reset the form after adding the team
-        setEmployeeData(initialEmployeeData);
-        setSelectedDepartment(null);
-        setSelectedRole(null);
-        setSelectedTeam(null);
+        dispatch(
+          hierarchyActions.addTeam({
+            employee: employeeData,
+            indexes: index,
+          }),
+        );
       } else {
         //you are editing some data
         dispatch(
@@ -84,8 +75,8 @@ const TeamFormScreen = ({route}: TeamProps) => {
             indexes: index,
           }),
         );
-        navigation.goBack();
       }
+      navigation.goBack();
     } else {
       setShowError(true);
     }
@@ -136,10 +127,6 @@ const TeamFormScreen = ({route}: TeamProps) => {
                 team: '',
               }));
               setSelectedDepartment(option.key);
-              if (typeof index === 'undefined') {
-                setSelectedRole(null); // Reset
-                setSelectedTeam(null); // Reset
-              }
             }}
             style={styles.modalSelector}
             selectStyle={styles.modalSelectorSelect}
@@ -158,10 +145,6 @@ const TeamFormScreen = ({route}: TeamProps) => {
                     ...prevData,
                     role: option.key,
                   }));
-                  setSelectedRole(option.key);
-                  if (typeof index === 'undefined') {
-                    setSelectedTeam(null); // Reset
-                  }
                 }}
                 style={styles.modalSelector}
                 selectStyle={styles.modalSelectorSelect}
@@ -169,11 +152,7 @@ const TeamFormScreen = ({route}: TeamProps) => {
             </View>
           </>
         )}
-        {selectedDepartment &&
-        selectedRole &&
-        (selectedRole === ROLE.HEAD ||
-          selectedRole === ROLE.TEAM ||
-          selectedTeam) ? (
+        {selectedDepartment && selectedRole ? (
           <>
             <Button title={title} onPress={handleAddTeamMember} />
           </>

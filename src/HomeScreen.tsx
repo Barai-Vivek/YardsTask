@@ -1,8 +1,12 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
+  ADD_TEAM_MEMBER,
+  ALL_EMPLOYEES,
+  EMPLOYEES,
   FilteredEmployeesScreen,
   HierarchyScreen,
+  TEAM,
   TeamFormScreen,
   TeamMemberForm,
 } from '.';
@@ -32,7 +36,7 @@ const HomeScreen = () => {
         name={NavigationRoutes.EMPLOYEES}
         component={HierarchyScreen}
         options={{
-          headerTitle: 'Employees',
+          headerTitle: EMPLOYEES,
           headerTitleAlign: 'center',
           headerRight: () => (
             <TouchableOpacity onPress={handleAddTeamMember}>
@@ -49,7 +53,7 @@ const HomeScreen = () => {
         name={NavigationRoutes.ADD_TEAM_MEMBER}
         component={TeamMemberForm}
         options={{
-          headerTitle: 'Add Team Member',
+          headerTitle: ADD_TEAM_MEMBER,
           headerTitleAlign: 'center',
         }}
       />
@@ -57,7 +61,7 @@ const HomeScreen = () => {
         name={NavigationRoutes.FILTERED_EMPLOYEES}
         component={FilteredEmployeesScreen}
         options={{
-          headerTitle: 'All Employees',
+          headerTitle: ALL_EMPLOYEES,
           headerTitleAlign: 'center',
         }}
       />
@@ -65,7 +69,7 @@ const HomeScreen = () => {
         name={NavigationRoutes.TEAM_FORM}
         component={TeamFormScreen}
         options={{
-          headerTitle: 'Team',
+          headerTitle: TEAM,
           headerTitleAlign: 'center',
         }}
       />

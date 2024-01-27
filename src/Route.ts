@@ -9,6 +9,7 @@ export type AddTeamMemberParams = {
 export type AddTeamParams = {
   employee?: EmployeeData;
   indexes?: number[];
+  addTeam: boolean;
 };
 
 export enum NavigationRoutes {

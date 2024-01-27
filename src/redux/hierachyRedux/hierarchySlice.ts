@@ -107,6 +107,20 @@ const {actions, reducer} = createSlice({
         teamMembers.splice(teamMemberIndex, 1);
       }
     },
+    addTeam: (state, action: PayloadAction<UpdateEmployee>) => {
+      const indexes = action.payload.indexes;
+      const data = action.payload.employee;
+
+      if (indexes && indexes.length === 2) {
+        const [ceoIndex, headIndex] = indexes;
+        const teams =
+          state.employees[ceoIndex].children?.[headIndex].children ?? [];
+
+        console.log({data});
+
+        teams.push(data);
+      }
+    },
   },
 });
 
@@ -118,25 +132,6 @@ export const hierarchyReducer = reducer;
 // editEmployee: (state, action: PayloadAction<UpdateEmployee>) => {
 //   const updatedEmployee = action.payload.employee;
 //   const indexes = action.payload.indexes;
-
-//   if (indexes && indexes.length > 0) {
-//     if (indexes.length === 1) {
-//       //Edit CEO
-//       console.log('Edit CEO');
-//     } else if (indexes.length === 2) {
-//       //Edit HEAD
-//       console.log('Edit HEAD');
-//     } else if (indexes.length === 3) {
-//       //Edit Team
-//       console.log('Edit Team');
-//     } else if (indexes.length === 4) {
-//       //Edit Team Leader
-//       console.log('Edit Team Leader');
-//     } else if (indexes.length === 5) {
-//       //Edit Team Member
-//       console.log('Edit Team Member');
-//     }
-
 //     // Find the employee to edit
 //     const findAndEditEmployee = (
 //       employees: EmployeeData[],
@@ -160,32 +155,13 @@ export const hierarchyReducer = reducer;
 //         }
 //       }
 //     };
-
 //     // Start the search from the top level
 //     findAndEditEmployee(state.employees, updatedEmployee.id);
-//   }
+//
 // },
 // deleteEmployee: (state, action: PayloadAction<UpdateEmployee>) => {
 //   const data = action.payload.employee;
 //   const indexes = action.payload.indexes;
-//   if (indexes && indexes.length > 0) {
-//     if (indexes.length === 1) {
-//       //Edit CEO
-//       console.log('Edit CEO');
-//     } else if (indexes.length === 2) {
-//       //Edit HEAD
-//       console.log('Edit HEAD');
-//     } else if (indexes.length === 3) {
-//       //Edit Team
-//       console.log('Edit Team');
-//     } else if (indexes.length === 4) {
-//       //Edit Team Leader
-//       console.log('Edit Team Leader');
-//     } else if (indexes.length === 5) {
-//       //Edit Team Member
-//       console.log('Edit Team Member');
-//     }
-
 //     const updatedEmployees = [...state.employees];
 
 //     const findAndDelete = (employee: EmployeeData) => {
@@ -196,8 +172,6 @@ export const hierarchyReducer = reducer;
 //         employee.children.forEach(child => findAndDelete(child));
 //       }
 //     };
-
 //     updatedEmployees.forEach(employee => findAndDelete(employee));
 //     state.employees = updatedEmployees;
-//   }
 // },

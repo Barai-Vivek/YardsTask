@@ -6,16 +6,21 @@ import {
   Button,
   StyleSheet,
   ScrollView,
-  Switch,
 } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
-import {ROLE, departments, generateUUID, roles} from '../Constants';
-import {EmployeeData, TeamMemberDetails, initialEmployeeData} from './types';
+import {
+  ADD_TEAM_MEMBER,
+  EDIT_TEAM_MEMBER,
+  ROLE,
+  departments,
+  generateUUID,
+  roles,
+} from '../Constants';
+import {EmployeeData, initialEmployeeData} from './types';
 import {TeamMemberProps} from '..';
 import {useNavigation} from '@react-navigation/native';
 import {
   hierarchyActions,
-  memberActions,
   selectTeamData,
   selectTeamLeader,
   useAppDispatch,
@@ -30,7 +35,7 @@ const TeamMemberForm = ({route}: TeamMemberProps) => {
   const navigation = useNavigation();
 
   const title =
-    typeof index === 'undefined' ? 'Add Team Member' : 'Edit Team Member';
+    typeof index === 'undefined' ? ADD_TEAM_MEMBER : EDIT_TEAM_MEMBER;
 
   const [employeeData, setEmployeeData] = useState<EmployeeData>(
     employee ?? initialEmployeeData,
@@ -84,17 +89,9 @@ const TeamMemberForm = ({route}: TeamMemberProps) => {
           setShowError(true);
         } else {
           employeeData.id = generateUUID();
-          const teamMember: TeamMemberDetails = {
-            name: employeeData.name,
-            id: employeeData.id,
-            phoneNumber: employeeData.phoneNumber,
-            email: employeeData.email,
-            role: employeeData.role,
-          };
           if (isEnabled) {
             dispatch(hierarchyActions.addEmployee(employeeData));
           }
-          dispatch(memberActions.addMember(teamMember));
 
           // Reset the form after adding the team member
           setEmployeeData(initialEmployeeData);
@@ -104,26 +101,12 @@ const TeamMemberForm = ({route}: TeamMemberProps) => {
         }
       } else {
         //you are editing some data
-        const teamMember: TeamMemberDetails = {
-          name: employeeData.name,
-          id: employeeData.id,
-          phoneNumber: employeeData.phoneNumber,
-          email: employeeData.email,
-          role: employeeData.role,
-        };
-        dispatch(memberActions.editMember(teamMember));
         dispatch(
           hierarchyActions.editEmployeeByIndex({
             employee: employeeData,
             indexes: index,
           }),
         );
-        // dispatch(
-        //   hierarchyActions.editEmployee({
-        //     employee: employeeData,
-        //     indexes: index,
-        //   }),
-        // );
         navigation.goBack();
       }
     } else {

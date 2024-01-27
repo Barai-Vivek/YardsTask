@@ -1,5 +1,13 @@
 import {EmployeeData} from './screens/types';
 
+export const ADD_TEAM = 'Add Team';
+export const EDIT_TEAM = 'Edit Team';
+export const ADD_TEAM_MEMBER = 'Add Team Member';
+export const EDIT_TEAM_MEMBER = 'Edit Team Member';
+export const ALL_EMPLOYEES = 'All Employees';
+export const TEAM = 'Team';
+export const EMPLOYEES = 'Employees';
+
 export enum DEPARTMENT {
   STAFF_HR = 'staff/HR',
   ENGINEERING = 'Engineering',
