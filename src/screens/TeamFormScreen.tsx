@@ -24,8 +24,6 @@ const TeamFormScreen = ({route}: TeamProps) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  console.log('Team form ' + index);
-
   const title = typeof index === 'undefined' ? 'Add Team' : 'Edit Team';
 
   const [employeeData, setEmployeeData] = useState<EmployeeData>(
@@ -62,7 +60,6 @@ const TeamFormScreen = ({route}: TeamProps) => {
     setShowError(false);
     if (isFormValid()) {
       // Implement logic to add the team
-      console.log('Adding team:', employeeData);
       if (typeof index === 'undefined') {
         employeeData.id = generateUUID();
         const teamMember: TeamMemberDetails = {
@@ -74,9 +71,6 @@ const TeamFormScreen = ({route}: TeamProps) => {
         };
 
         dispatch(hierarchyActions.addEmployee(employeeData));
-
-        console.log('Added team:', employeeData);
-
         // Reset the form after adding the team
         setEmployeeData(initialEmployeeData);
         setSelectedDepartment(null);

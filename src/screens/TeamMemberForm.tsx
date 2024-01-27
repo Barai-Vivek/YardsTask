@@ -26,8 +26,6 @@ const TeamMemberForm = ({route}: TeamMemberProps) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  console.log('Team member form ' + index);
-
   const title =
     typeof index === 'undefined' ? 'Add Team Member' : 'Edit Team Member';
 
@@ -44,7 +42,7 @@ const TeamMemberForm = ({route}: TeamMemberProps) => {
     employee?.team ?? null,
   );
   const [isEnabled, setIsEnabled] = useState(
-    typeof index === 'undefined' ? false : true,
+    typeof index === 'undefined' ? true : false,
   );
   const [showError, setShowError] = useState(false);
   const [errMessage, setErrorMessage] = useState('');
@@ -71,7 +69,6 @@ const TeamMemberForm = ({route}: TeamMemberProps) => {
     setShowError(false);
     if (isFormValid()) {
       // Implement logic to add the team member
-      console.log('Adding team member:', employeeData);
       if (typeof index === 'undefined') {
         if (teamLeaderExists && employeeData.role === ROLE.TEAM_LEADER) {
           setErrorMessage('Already team leader exists');
@@ -95,7 +92,6 @@ const TeamMemberForm = ({route}: TeamMemberProps) => {
             dispatch(hierarchyActions.addEmployee(employeeData));
           }
           dispatch(memberActions.addMember(teamMember));
-          console.log('Added team member:', employeeData);
 
           // Reset the form after adding the team member
           setEmployeeData(initialEmployeeData);

@@ -9,23 +9,12 @@ import {
 } from 'react-native';
 import {useAppSelector} from '../redux/hook/useAppSelector';
 import {selectEmployeeData} from '../redux/selector';
-import {FilteredEmployee} from './components/FilteredEmployee';
-import {ROLE} from '..';
+import {EmployeeComponent} from './components/EmployeeComponent';
 
 const FilteredEmployeesScreen = () => {
   const employeesData = useAppSelector(selectEmployeeData);
 
   const [searchText, setSearchText] = useState<string>('');
-
-  // Function to filter employees based on search query
-  //   const filteredEmployees = employeesData.filter(employee => {
-  //     return (
-  //       employee.role !== ROLE.TEAM &&
-  //       (employee.name.toLowerCase().includes(searchText.toLowerCase()) ||
-  //         (employee.role &&
-  //           employee.role.toLowerCase().includes(searchText.toLowerCase())))
-  //     );
-  //   });
 
   return (
     <View style={styles.container}>
@@ -52,11 +41,12 @@ const FilteredEmployeesScreen = () => {
         keyExtractor={(_, index) => index.toString()}
         renderItem={({item, index}) => {
           return (
-            <FilteredEmployee
+            <EmployeeComponent
               employee={item}
               index={index}
               indexes={[index]}
               searchText={searchText}
+              onlyEmployees={true}
             />
           );
         }}

@@ -3,6 +3,7 @@ export interface EmployeeProps {
   index: number;
   indexes: number[];
   searchText?: string;
+  onlyEmployees?: boolean;
 }
 
 export interface EmployeeData {

@@ -1,2 +1,2 @@
-export * from './Employee';
 export * from './ToggleButton';
+export * from './EmployeeComponent';
