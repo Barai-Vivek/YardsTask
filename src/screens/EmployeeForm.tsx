@@ -17,7 +17,7 @@ import {
   roles,
 } from '../Constants';
 import {EmployeeData, initialEmployeeData} from './types';
-import {TeamMemberProps} from '..';
+import {EmployeeFormProps} from '..';
 import {useNavigation} from '@react-navigation/native';
 import {
   hierarchyActions,
@@ -28,7 +28,7 @@ import {
 } from '../redux';
 import {ToggleButton} from './components';
 
-const TeamMemberForm = ({route}: TeamMemberProps) => {
+const EmployeeForm = ({route}: EmployeeFormProps) => {
   const employee = route.params?.employee;
   const index = route.params?.indexes;
   const dispatch = useAppDispatch();
@@ -314,4 +314,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {TeamMemberForm};
+export {EmployeeForm};

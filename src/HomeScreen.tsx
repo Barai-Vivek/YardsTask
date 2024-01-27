@@ -8,7 +8,7 @@ import {
   HierarchyScreen,
   TEAM,
   TeamFormScreen,
-  TeamMemberForm,
+  EmployeeForm,
 } from '.';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationRoutes, TabStackParamList} from './Route';
@@ -21,7 +21,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
 
   const handleAddTeamMember = () => {
-    // Navigate to the TeamMemberForm screen
+    // Navigate to the EmployeeForm screen
     navigation.navigate(NavigationRoutes.ADD_TEAM_MEMBER as never);
   };
 
@@ -51,7 +51,7 @@ const HomeScreen = () => {
       />
       <Stack.Screen
         name={NavigationRoutes.ADD_TEAM_MEMBER}
-        component={TeamMemberForm}
+        component={EmployeeForm}
         options={{
           headerTitle: ADD_TEAM_MEMBER,
           headerTitleAlign: 'center',

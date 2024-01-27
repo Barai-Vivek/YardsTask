@@ -28,13 +28,13 @@ export type TabStackParamList = {
   [NavigationRoutes.TEAM_FORM]: AddTeamParams;
 };
 
-type TeamMemberFormRouteProp = RouteProp<
+type EmployeeFormRouteProp = RouteProp<
   TabStackParamList,
   NavigationRoutes.ADD_TEAM_MEMBER
 >;
 
-export type TeamMemberProps = {
-  route: TeamMemberFormRouteProp;
+export type EmployeeFormProps = {
+  route: EmployeeFormRouteProp;
 };
 
 type TeamFormRouteProp = RouteProp<
