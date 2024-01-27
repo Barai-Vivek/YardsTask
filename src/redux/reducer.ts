@@ -1,14 +1,18 @@
-import {combineReducers} from '@reduxjs/toolkit';
-import {TeamState, teamReducer} from './teamSlice'; // Assuming you have exported TeamState from teamSlice
-
-// Define the root state interface
-export interface RootState {
-  team: TeamState;
-}
+import {AnyAction, combineReducers} from '@reduxjs/toolkit';
+import {hierarchyReducer} from './hierachyRedux/hierarchySlice';
+import {memberReducer} from './memberRedux/memberSlice';
 
 // Combine all reducers into a single rootReducer
-const rootReducer = combineReducers({
-  team: teamReducer,
+const appReducer = combineReducers({
+  team: hierarchyReducer,
+  member: memberReducer,
 });
+
+const rootReducer = (
+  state: ReturnType<typeof appReducer> | undefined,
+  action: AnyAction,
+) => {
+  return appReducer(state, action);
+};
 
 export default rootReducer;

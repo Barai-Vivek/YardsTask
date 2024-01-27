@@ -1,18 +1,16 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {defaultEmployees} from '../Constants';
-import {teamReducer} from './teamSlice';
-
-const preloadedState = {
-  team: {
-    employees: defaultEmployees,
-  },
-};
+import rootReducer from './reducer';
 
 const store = configureStore({
-  reducer: {
-    team: teamReducer,
-  },
-  preloadedState,
+  reducer: rootReducer,
 });
 
-export default store;
+export const setupStore = () => {
+  return configureStore({
+    reducer: rootReducer,
+  });
+};
+
+export type AppStore = ReturnType<typeof setupStore>;
+
+export {store};

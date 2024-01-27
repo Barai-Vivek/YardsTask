@@ -1,5 +1,5 @@
 import {Dimensions} from 'react-native';
-import {EmployeeData} from '.';
+import {EmployeeData} from './screens/types';
 export const {width, height} = Dimensions.get('screen');
 
 const guidelineBaseWidth: number = 375;
@@ -119,6 +119,32 @@ export const defaultEmployees: EmployeeData[] = [
     ],
   },
 ];
+
+export const generateUUID = (): string => {
+  let d = new Date().getTime(); // Timestamp
+  let d2 =
+    (typeof performance !== 'undefined' &&
+      performance.now &&
+      performance.now() * 1000) ||
+    0; // Time in microseconds since page-load or 0 if unsupported
+
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = Math.random() * 16; // Random number between 0 and 16
+    let result;
+
+    if (d > 0) {
+      // Use timestamp until depleted
+      result = (d + r) % 16 | 0;
+      d = Math.floor(d / 16);
+    } else {
+      // Use microseconds since page-load if supported
+      result = (d2 + r) % 16 | 0;
+      d2 = Math.floor(d2 / 16);
+    }
+
+    return (c === 'x' ? result : (result & 0x3) | 0x8).toString(16);
+  });
+};
 
 // export const employeeData: EmployeeData[] = [
 //   {

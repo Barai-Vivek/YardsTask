@@ -1,6 +1,8 @@
-export interface EmployeeNodeProps {
-  node: EmployeeData;
+export interface EmployeeProps {
+  employee: EmployeeData;
   index: number;
+  indexes: number[];
+  searchText?: string;
 }
 
 export interface EmployeeData {
@@ -23,4 +25,22 @@ export const initialEmployeeData: EmployeeData = {
   team: '',
   role: '',
   children: [],
+};
+
+export type TeamMemberDetails = {
+  id: string;
+  name: string;
+  phoneNumber?: string;
+  email?: string;
+  role?: string;
+};
+
+export type TeamMemberProp = {
+  member: TeamMemberDetails;
+  index: number;
+};
+
+export type UpdateEmployee = {
+  employee: EmployeeData;
+  indexes?: number[];
 };

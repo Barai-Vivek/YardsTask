@@ -1,9 +1,12 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {EmployeesScreen, TeamMemberForm} from '.';
+import {HierarchyScreen, TeamMemberForm} from '.';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationRoutes, TabStackParamList} from './Route';
 import {useNavigation} from '@react-navigation/native';
+import {AllMembersScreen} from './screens/AllMembersScreen';
+import {FilteredEmployeesScreen} from './screens/FilteredEmployeesScreen';
+import {TeamFormScreen} from './screens/TeamFormScreen';
 
 const Stack = createNativeStackNavigator<TabStackParamList>();
 
@@ -24,7 +27,7 @@ const HomeScreen = () => {
       }}>
       <Stack.Screen
         name={NavigationRoutes.EMPLOYEES}
-        component={EmployeesScreen}
+        component={HierarchyScreen}
         options={{
           headerTitle: 'Employees',
           headerTitleAlign: 'center',
@@ -44,6 +47,22 @@ const HomeScreen = () => {
         component={TeamMemberForm}
         options={{
           headerTitle: 'Add Team Member',
+          headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        name={NavigationRoutes.FILTERED_EMPLOYEES}
+        component={FilteredEmployeesScreen}
+        options={{
+          headerTitle: 'All Employees',
+          headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        name={NavigationRoutes.TEAM_FORM}
+        component={TeamFormScreen}
+        options={{
+          headerTitle: 'Team',
           headerTitleAlign: 'center',
         }}
       />

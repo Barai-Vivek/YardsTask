@@ -1,6 +1,6 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {RootState} from './reducer';
 import {ROLE} from '../Constants';
+import {RootState} from './type';
 
 export const selectEmployeeData = createSelector(
   (state: RootState) => state.team.employees,
@@ -76,4 +76,18 @@ export const selectTeamLeader = (department?: string, teamName?: string) =>
       // Check if there is at least one team leader in the team
       return team.children.some(employee => employee.role === ROLE.TEAM_LEADER);
     },
+  );
+
+export const selectMembersData = createSelector(
+  (state: RootState) => state.member.teamMemberDetails,
+  members => members,
+);
+
+export const selectMemberSearchTextData = (searchQuery: string) =>
+  createSelector(
+    (state: RootState) => state.member.teamMemberDetails,
+    members =>
+      members.filter(member =>
+        member.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
   );
