@@ -2,6 +2,7 @@ import {EmployeeData} from './screens/types';
 
 export const HOME_SCREEN = 'HOME_SCREEN';
 export const EMPLOYEE_COMPONENT_SCREEN = 'EMPLOYEE_COMPONENT_SCREEN';
+export const TEAM_FORM_SCREEN = 'TEAM_FORM_SCREEN';
 export const ADD_TEAM = 'Add Team';
 export const EDIT_TEAM = 'Edit Team';
 export const ADD_EMPLOYEE = 'Add Employee';

@@ -1,5 +1,4 @@
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
 import {useState, useEffect} from 'react';
 import {
   Button,
@@ -18,25 +17,28 @@ import {
   TeamProps,
   ADD_TEAM,
   EDIT_TEAM,
+  NavigationRoutes,
+  TEAM_FORM_SCREEN,
 } from '..';
 import {EmployeeData, initialEmployeeData} from './types';
 import {
   hierarchyActions,
   selectAllTeamNames,
   useAppDispatch,
+  useAppNavigation,
   useAppSelector,
 } from '../redux';
 
-const TeamFormScreen = ({route}: TeamProps) => {
+const TeamFormScreen = ({route, navigation}: TeamProps) => {
   const employee = route.params?.employee;
   const index = route.params?.indexes;
   const addTeam = route.params?.addTeam;
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  //const navigation = useAppNavigation();
 
   const title = addTeam ? ADD_TEAM : EDIT_TEAM;
 
-  const [employeeData, setEmployeeData] = useState<EmployeeData>(
+  const [teamData, setTeamData] = useState<EmployeeData>(
     employee ?? initialEmployeeData,
   );
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(
@@ -55,7 +57,28 @@ const TeamFormScreen = ({route}: TeamProps) => {
 
   const handleInputChange = (field: keyof EmployeeData, value: string) => {
     setShowError(false);
-    setEmployeeData(prevData => ({...prevData, [field]: value}));
+    setTeamData(prevData => ({...prevData, [field]: value}));
+  };
+
+  const navigateToAddNewEmployee = (teamData: EmployeeData) => {
+    const newEmployee: EmployeeData = {
+      id: '',
+      name: '',
+      role: ROLE.TEAM_LEADER,
+      department: teamData.department,
+      team: teamData.name,
+      children: [],
+    };
+    const indexes = [...(index ?? []), 0];
+
+    console.log({newEmployee});
+
+    navigation.navigate(NavigationRoutes.ADD_EMPLOYEE, {
+      employee: newEmployee,
+      indexes: indexes,
+      addNewEmployee: true,
+      fromScreen: TEAM_FORM_SCREEN,
+    });
   };
 
   const handleAddTeam = () => {
@@ -63,18 +86,19 @@ const TeamFormScreen = ({route}: TeamProps) => {
     if (isFormValid()) {
       // Implement logic to add the team
       if (addTeam) {
-        employeeData.id = generateUUID();
-        dispatch(
-          hierarchyActions.addTeam({
-            employee: employeeData,
-            indexes: index,
-          }),
-        );
+        teamData.id = generateUUID();
+        navigateToAddNewEmployee(teamData);
+        // dispatch(
+        //   hierarchyActions.addTeam({
+        //     employee: teamData,
+        //     indexes: index,
+        //   }),
+        // );
       } else {
         //you are editing some data
         dispatch(
           hierarchyActions.editEmployeeByIndex({
-            employee: employeeData,
+            employee: teamData,
             indexes: index,
           }),
         );
@@ -99,13 +123,13 @@ const TeamFormScreen = ({route}: TeamProps) => {
     }
 
     // Check if name,phone number, and email are filled
-    if (!employeeData.name) {
+    if (!teamData.name) {
       setErrorMessage('Please fill out all required fields correctly.');
       return false;
     }
 
     const isNameIncluded = teamsName.some(
-      name => name.toLowerCase() === employeeData.name.toLowerCase(),
+      name => name.toLowerCase() === teamData.name.toLowerCase(),
     );
 
     if (isNameIncluded) {
@@ -124,7 +148,7 @@ const TeamFormScreen = ({route}: TeamProps) => {
           style={styles.input}
           placeholder="Name"
           onChangeText={value => handleInputChange('name', value)}
-          value={employeeData?.name ?? ''}
+          value={teamData?.name ?? ''}
         />
         <View style={styles.pickerContainer}>
           <Text style={styles.label}>Department</Text>
@@ -133,7 +157,7 @@ const TeamFormScreen = ({route}: TeamProps) => {
             initValue={selectedDepartment || 'Select Department'}
             disabled={typeof index !== 'undefined' ? true : false}
             onChange={option => {
-              setEmployeeData(prevData => ({
+              setTeamData(prevData => ({
                 ...prevData,
                 department: option.key,
                 team: '',
@@ -153,7 +177,7 @@ const TeamFormScreen = ({route}: TeamProps) => {
                 initValue={selectedRole || 'Select Role'}
                 disabled={typeof index !== 'undefined' ? true : false}
                 onChange={option => {
-                  setEmployeeData(prevData => ({
+                  setTeamData(prevData => ({
                     ...prevData,
                     role: option.key,
                   }));

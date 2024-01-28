@@ -1,5 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {EmployeeData} from '.';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 export type AddEmployeeParams = {
   employee?: EmployeeData;
@@ -22,7 +23,7 @@ export enum NavigationRoutes {
   TEAM_FORM = 'TEAM_FORM',
 }
 
-export type TabStackParamList = {
+export type NavigationStackParamList = {
   [NavigationRoutes.EMPLOYEES]: undefined;
   [NavigationRoutes.ADD_EMPLOYEE]: AddEmployeeParams;
   [NavigationRoutes.ALL_MEMBERS]: undefined;
@@ -31,7 +32,7 @@ export type TabStackParamList = {
 };
 
 type EmployeeFormRouteProp = RouteProp<
-  TabStackParamList,
+  NavigationStackParamList,
   NavigationRoutes.ADD_EMPLOYEE
 >;
 
@@ -40,10 +41,14 @@ export type EmployeeFormProps = {
 };
 
 type TeamFormRouteProp = RouteProp<
-  TabStackParamList,
+  NavigationStackParamList,
   NavigationRoutes.TEAM_FORM
 >;
 
 export type TeamProps = {
   route: TeamFormRouteProp;
+  navigation: StackNavigationProp<
+    NavigationStackParamList,
+    NavigationRoutes.TEAM_FORM
+  >;
 };

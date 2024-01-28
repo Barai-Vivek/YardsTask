@@ -1,5 +1,4 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   ADD_EMPLOYEE,
   ALL_EMPLOYEES,
@@ -12,14 +11,15 @@ import {
   HOME_SCREEN,
 } from '.';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-import {NavigationRoutes, TabStackParamList} from './Route';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationRoutes, NavigationStackParamList} from './Route';
 import {Images} from './assets';
+import {createStackNavigator} from '@react-navigation/stack';
+import {useAppNavigation} from './redux';
 
-const Stack = createNativeStackNavigator<TabStackParamList>();
+const Stack = createStackNavigator<NavigationStackParamList>();
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useAppNavigation();
 
   const handleAddEmployee = () => {
     // Navigate to the EmployeeForm screen
@@ -56,14 +56,6 @@ const HomeScreen = () => {
         }}
       />
       <Stack.Screen
-        name={NavigationRoutes.ADD_EMPLOYEE}
-        component={EmployeeFormScreen}
-        options={{
-          headerTitle: ADD_EMPLOYEE,
-          headerTitleAlign: 'center',
-        }}
-      />
-      <Stack.Screen
         name={NavigationRoutes.FILTERED_EMPLOYEES}
         component={FilteredEmployeesScreen}
         options={{
@@ -76,6 +68,14 @@ const HomeScreen = () => {
         component={TeamFormScreen}
         options={{
           headerTitle: TEAM,
+          headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        name={NavigationRoutes.ADD_EMPLOYEE}
+        component={EmployeeFormScreen}
+        options={{
+          headerTitle: ADD_EMPLOYEE,
           headerTitleAlign: 'center',
         }}
       />

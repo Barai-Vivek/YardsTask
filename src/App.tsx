@@ -1,4 +1,5 @@
 import React from 'react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import HomeScreen from './HomeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider} from 'react-redux';
@@ -7,13 +8,15 @@ import {persistor, store} from './redux';
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          <HomeScreen />
-        </NavigationContainer>
-      </PersistGate>
-    </Provider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
+            <HomeScreen />
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 

@@ -1,12 +1,12 @@
-export interface EmployeeProps {
+export type EmployeeProps = {
   employee: EmployeeData;
   index: number;
   indexes: number[];
   searchText?: string;
   onlyEmployees?: boolean;
-}
+};
 
-export interface EmployeeData {
+export type EmployeeData = {
   name: string;
   id: string;
   phoneNumber?: string;
@@ -15,7 +15,7 @@ export interface EmployeeData {
   role: string;
   children?: EmployeeData[];
   email?: string;
-}
+};
 
 export const initialEmployeeData: EmployeeData = {
   name: '',
@@ -31,4 +31,14 @@ export const initialEmployeeData: EmployeeData = {
 export type UpdateEmployee = {
   employee: EmployeeData;
   indexes?: number[];
+  oldTeamIndex?: number;
+  teamMemberOldIndex?: number;
+};
+
+export const validateEmail = (email: string): boolean => {
+  // Regular expression for email validation
+  const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Test if the email matches the regex pattern
+  return emailRegex.test(email);
 };

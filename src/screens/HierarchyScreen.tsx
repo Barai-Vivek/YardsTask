@@ -1,13 +1,12 @@
 import React from 'react';
 import {View, FlatList, StyleSheet, Button} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {NavigationRoutes} from '..';
 import {EmployeeComponent} from './components';
-import {selectEmployeeData, useAppSelector} from '../redux';
+import {selectEmployeeData, useAppNavigation, useAppSelector} from '../redux';
 
 const HierarchyScreen = () => {
   const employeesData = useAppSelector(selectEmployeeData);
-  const navigation = useNavigation();
+  const navigation = useAppNavigation();
 
   const navigateToAllEmployeesScreen = () => {
     navigation.navigate(NavigationRoutes.FILTERED_EMPLOYEES as never);

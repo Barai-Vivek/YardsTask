@@ -12,20 +12,25 @@ import {
   ADD_EMPLOYEE,
   EDIT_EMPLOYEE,
   EMPLOYEE_COMPONENT_SCREEN,
-  HOME_SCREEN,
   ROLE,
+  TEAM_FORM_SCREEN,
   departments,
   generateUUID,
   roles,
 } from '../Constants';
-import {EmployeeData, initialEmployeeData} from './types';
+import {
+  EmployeeData,
+  UpdateEmployee,
+  initialEmployeeData,
+  validateEmail,
+} from './types';
 import {EmployeeFormProps} from '..';
-import {useNavigation} from '@react-navigation/native';
 import {
   hierarchyActions,
   selectTeamData,
   selectTeamLeader,
   useAppDispatch,
+  useAppNavigation,
   useAppSelector,
 } from '../redux';
 
@@ -34,8 +39,9 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
   const index = route.params?.indexes;
   const addNewEmployee = route.params?.addNewEmployee;
   const fromScreen = route.params?.fromScreen;
+
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigation = useAppNavigation();
 
   const title = addNewEmployee ? ADD_EMPLOYEE : EDIT_EMPLOYEE;
 
@@ -53,6 +59,12 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
   );
   const [showError, setShowError] = useState(false);
   const [errMessage, setErrorMessage] = useState('');
+
+  const [editTeamIndex, setEditTeamIndex] = useState<number[]>([]);
+  const [newTeamLeader, setNewTeamLeader] = useState({});
+  const [newTeamLeaderIndexes, setNewTeamLeaderIndexes] = useState<number[]>(
+    [],
+  );
 
   // Selector to get teams based on selected department
   const teamsForSelectedDepartment = useAppSelector(
@@ -94,7 +106,30 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
         } else {
           employeeData.id = generateUUID();
 
-          if (fromScreen === EMPLOYEE_COMPONENT_SCREEN) {
+          if (fromScreen === TEAM_FORM_SCREEN) {
+            if (!newTeamLeader) {
+              setNewTeamLeaderIndexes(index ?? []);
+              setNewTeamLeader({
+                employee: employeeData,
+                indexes: index,
+              });
+
+              const newEmployee: EmployeeData = {
+                id: '',
+                name: '',
+                role: ROLE.TEAM_MEMBER,
+                department: employeeData.department,
+                team: employeeData.team,
+                children: [],
+              };
+
+              // Reset the form after adding the team member
+              setEmployeeData(initialEmployeeData);
+              setSelectedDepartment(null);
+              setSelectedRole(null);
+              setSelectedTeam(null);
+            }
+          } else if (fromScreen === EMPLOYEE_COMPONENT_SCREEN) {
             dispatch(
               hierarchyActions.addEmployeeByIndex({
                 employee: employeeData,
@@ -104,22 +139,30 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
             navigation.goBack();
           } else {
             dispatch(hierarchyActions.addEmployee(employeeData));
-          }
 
-          // Reset the form after adding the team member
-          setEmployeeData(initialEmployeeData);
-          setSelectedDepartment(null);
-          setSelectedRole(null);
-          setSelectedTeam(null);
+            // Reset the form after adding the team member
+            setEmployeeData(initialEmployeeData);
+            setSelectedDepartment(null);
+            setSelectedRole(null);
+            setSelectedTeam(null);
+          }
         }
       } else {
         //you are editing some data
-        dispatch(
-          hierarchyActions.editEmployeeByIndex({
-            employee: employeeData,
-            indexes: index,
-          }),
-        );
+        //Team member has changed the team
+        const updatedData: UpdateEmployee = {
+          employee: employeeData,
+          indexes: index,
+        };
+        if (editTeamIndex.length > 0) {
+          updatedData.indexes = editTeamIndex;
+          if (index && index.length == 5) {
+            updatedData.oldTeamIndex = index[2];
+            updatedData.teamMemberOldIndex = index[4];
+          }
+        }
+
+        dispatch(hierarchyActions.editEmployeeByIndex(updatedData));
         navigation.goBack();
       }
     } else {
@@ -159,7 +202,20 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
       setErrorMessage('Please fill out all required fields correctly.');
       return false;
     }
+
+    if (employeeData.email && !validateEmail(employeeData.email)) {
+      setErrorMessage('Please enter a valid email address.');
+      return false;
+    }
     return true;
+  };
+
+  const disableModalSelector = () => {
+    return (
+      !addNewEmployee ||
+      fromScreen === EMPLOYEE_COMPONENT_SCREEN ||
+      fromScreen === TEAM_FORM_SCREEN
+    );
   };
 
   return (
@@ -193,9 +249,7 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
           <ModalSelector
             data={departments.map(dep => ({key: dep, label: dep}))}
             initValue={selectedDepartment || 'Select Department'}
-            disabled={
-              !addNewEmployee || fromScreen === EMPLOYEE_COMPONENT_SCREEN
-            }
+            disabled={disableModalSelector()}
             onChange={option => {
               setEmployeeData(prevData => ({
                 ...prevData,
@@ -222,22 +276,29 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
                 <View style={styles.pickerContainer}>
                   <Text style={styles.label}>Team</Text>
                   <ModalSelector
-                    data={(teamsForSelectedDepartment || []).map(team => ({
-                      key: team,
-                      label: team,
-                    }))}
-                    disabled={
-                      !addNewEmployee ||
-                      fromScreen === EMPLOYEE_COMPONENT_SCREEN
-                    }
+                    data={(teamsForSelectedDepartment || []).map(
+                      (team: string, index: number) => ({
+                        key: team,
+                        label: team,
+                        keyIndex: index,
+                      }),
+                    )}
+                    // disabled={
+                    //   !addNewEmployee || fromScreen === TEAM_FORM_SCREEN
+                    // }
                     initValue={selectedTeam || 'Select Team'}
                     onChange={option => {
+                      if (index && index.length >= 3) {
+                        let changedIndex = [...index];
+                        changedIndex?.splice(2, 1, option.keyIndex);
+                        setEditTeamIndex(changedIndex);
+                      }
                       setEmployeeData(prevData => ({
                         ...prevData,
                         team: option.key,
                       }));
                       setSelectedTeam(option.key);
-                      if (addNewEmployee) {
+                      if (addNewEmployee && !disableModalSelector()) {
                         setSelectedRole(null); // Reset
                       }
                     }}
@@ -256,10 +317,7 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
                   <ModalSelector
                     data={roles.map(role => ({key: role, label: role}))}
                     initValue={selectedRole || 'Select Role'}
-                    disabled={
-                      !addNewEmployee ||
-                      fromScreen === EMPLOYEE_COMPONENT_SCREEN
-                    }
+                    disabled={disableModalSelector()}
                     onChange={option => {
                       setEmployeeData(prevData => ({
                         ...prevData,

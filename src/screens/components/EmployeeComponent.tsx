@@ -9,10 +9,9 @@ import {
 } from 'react-native';
 import {EMPLOYEE_COMPONENT_SCREEN, ROLE} from '../../Constants';
 import {EmployeeData, EmployeeProps} from '../types';
-import {useNavigation} from '@react-navigation/native';
 import {NavigationRoutes} from '../../Route';
 import {Images} from '../../assets';
-import {hierarchyActions, useAppDispatch} from '../../redux';
+import {hierarchyActions, useAppDispatch, useAppNavigation} from '../../redux';
 
 const EmployeeComponent = ({
   employee,
@@ -21,7 +20,7 @@ const EmployeeComponent = ({
   searchText = '',
   onlyEmployees = false,
 }: EmployeeProps) => {
-  const navigation = useNavigation();
+  const navigation = useAppNavigation();
   const dispatch = useAppDispatch();
 
   // Define the function to navigate to another screen with data
@@ -30,6 +29,7 @@ const EmployeeComponent = ({
       navigation.navigate(NavigationRoutes.TEAM_FORM, {
         employee: item,
         indexes: indexes,
+        addTeam: false,
       });
     } else {
       navigation.navigate(NavigationRoutes.ADD_EMPLOYEE, {
@@ -136,6 +136,7 @@ const EmployeeComponent = ({
               </>
             )) || (
               <>
+                <Text style={styles.boldLabel}>{ROLE.TEAM}</Text>
                 <Text style={styles.label}>{employee.name}</Text>
               </>
             )}
@@ -223,6 +224,12 @@ const styles = StyleSheet.create({
     padding: 6,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  boldLabel: {
+    fontSize: 18,
+    borderColor: 'grey',
+    padding: 6,
+    fontWeight: 'bold',
   },
   label: {
     fontSize: 18,

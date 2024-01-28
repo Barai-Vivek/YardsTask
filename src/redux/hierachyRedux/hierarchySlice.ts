@@ -48,6 +48,8 @@ const {actions, reducer} = createSlice({
     editEmployeeByIndex: (state, action: PayloadAction<UpdateEmployee>) => {
       const updatedEmployee = action.payload.employee;
       const indexes = action.payload.indexes;
+      const oldTeamIndex = action.payload.oldTeamIndex;
+      const teamMemberOldIndex = action.payload.teamMemberOldIndex;
 
       if (indexes && indexes.length > 0) {
         if (indexes.length === 1) {
@@ -73,18 +75,39 @@ const {actions, reducer} = createSlice({
           teamLeaders[teamLeaderIndex] = updatedEmployee;
         } else if (indexes.length === 5) {
           //Edit Employee
-          const [
-            ceoIndex,
-            headIndex,
-            teamIndex,
-            teamLeaderIndex,
-            teamMemberIndex,
-          ] = indexes;
-          const teamMembers =
-            state.employees[ceoIndex]?.children?.[headIndex]?.children?.[
-              teamIndex
-            ]?.children?.[teamLeaderIndex]?.children ?? [];
-          teamMembers[teamMemberIndex] = updatedEmployee;
+          if (
+            typeof oldTeamIndex !== 'undefined' &&
+            typeof teamMemberOldIndex !== 'undefined'
+          ) {
+            const [ceoIndex, headIndex, teamIndex, teamLeaderIndex] = indexes;
+            const fetchOldTeamMembers =
+              state.employees[ceoIndex]?.children?.[headIndex]?.children?.[
+                oldTeamIndex
+              ]?.children?.[teamLeaderIndex]?.children ?? [];
+            //Remove from old team and to new team
+            if (fetchOldTeamMembers[teamMemberOldIndex]) {
+              fetchOldTeamMembers.splice(teamMemberOldIndex, 1);
+            }
+            //Add member to new team
+            const teamMembers =
+              state.employees[ceoIndex]?.children?.[headIndex]?.children?.[
+                teamIndex
+              ]?.children?.[teamLeaderIndex]?.children ?? [];
+            teamMembers.push(updatedEmployee);
+          } else {
+            const [
+              ceoIndex,
+              headIndex,
+              teamIndex,
+              teamLeaderIndex,
+              teamMemberIndex,
+            ] = indexes;
+            const teamMembers =
+              state.employees[ceoIndex]?.children?.[headIndex]?.children?.[
+                teamIndex
+              ]?.children?.[teamLeaderIndex]?.children ?? [];
+            teamMembers[teamMemberIndex] = updatedEmployee;
+          }
         }
       }
     },
