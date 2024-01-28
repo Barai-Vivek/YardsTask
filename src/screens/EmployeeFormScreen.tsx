@@ -9,8 +9,10 @@ import {
 } from 'react-native';
 import ModalSelector from 'react-native-modal-selector';
 import {
-  ADD_TEAM_MEMBER,
-  EDIT_TEAM_MEMBER,
+  ADD_EMPLOYEE,
+  EDIT_EMPLOYEE,
+  EMPLOYEE_COMPONENT_SCREEN,
+  HOME_SCREEN,
   ROLE,
   departments,
   generateUUID,
@@ -26,16 +28,16 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '../redux';
-import {ToggleButton} from './components';
 
-const EmployeeForm = ({route}: EmployeeFormProps) => {
+const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
   const employee = route.params?.employee;
   const index = route.params?.indexes;
+  const addNewEmployee = route.params?.addNewEmployee;
+  const fromScreen = route.params?.fromScreen;
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const title =
-    typeof index === 'undefined' ? ADD_TEAM_MEMBER : EDIT_TEAM_MEMBER;
+  const title = addNewEmployee ? ADD_EMPLOYEE : EDIT_EMPLOYEE;
 
   const [employeeData, setEmployeeData] = useState<EmployeeData>(
     employee ?? initialEmployeeData,
@@ -48,9 +50,6 @@ const EmployeeForm = ({route}: EmployeeFormProps) => {
   );
   const [selectedTeam, setSelectedTeam] = useState<string | null>(
     employee?.team ?? null,
-  );
-  const [isEnabled, setIsEnabled] = useState(
-    typeof index === 'undefined' ? true : false,
   );
   const [showError, setShowError] = useState(false);
   const [errMessage, setErrorMessage] = useState('');
@@ -65,7 +64,12 @@ const EmployeeForm = ({route}: EmployeeFormProps) => {
   );
 
   useEffect(() => {
-    setShowError(false);
+    if (selectedDepartment && teamsForSelectedDepartment?.length === 0) {
+      setErrorMessage(`There is no teams in ${selectedDepartment}`);
+      setShowError(true);
+    } else {
+      setShowError(false);
+    }
   }, [selectedTeam, selectedRole, selectedDepartment]);
 
   const handleInputChange = (field: keyof EmployeeData, value: string) => {
@@ -73,11 +77,11 @@ const EmployeeForm = ({route}: EmployeeFormProps) => {
     setEmployeeData(prevData => ({...prevData, [field]: value}));
   };
 
-  const handleAddTeamMember = () => {
+  const handleAddEmployee = () => {
     setShowError(false);
     if (isFormValid()) {
       // Implement logic to add the team member
-      if (typeof index === 'undefined') {
+      if (addNewEmployee) {
         if (teamLeaderExists && employeeData.role === ROLE.TEAM_LEADER) {
           setErrorMessage('Already team leader exists');
           setShowError(true);
@@ -89,7 +93,16 @@ const EmployeeForm = ({route}: EmployeeFormProps) => {
           setShowError(true);
         } else {
           employeeData.id = generateUUID();
-          if (isEnabled) {
+
+          if (fromScreen === EMPLOYEE_COMPONENT_SCREEN) {
+            dispatch(
+              hierarchyActions.addEmployeeByIndex({
+                employee: employeeData,
+                indexes: index,
+              }),
+            );
+            navigation.goBack();
+          } else {
             dispatch(hierarchyActions.addEmployee(employeeData));
           }
 
@@ -115,27 +128,26 @@ const EmployeeForm = ({route}: EmployeeFormProps) => {
   };
 
   const isFormValid = () => {
-    if (isEnabled) {
-      // Check if department is selected
-      if (!selectedDepartment) {
-        setErrorMessage('Please select department.');
-        return false;
-      }
+    // Check if department is selected
+    if (!selectedDepartment) {
+      setErrorMessage('Please select department.');
+      return false;
+    }
 
-      // Check if role is selected
-      if (!selectedRole) {
-        setErrorMessage('Please select role.');
-        return false;
-      }
+    // Check if role is selected
+    if (!selectedRole) {
+      setErrorMessage('Please select role.');
+      return false;
+    }
 
-      // Check if team is selected (if applicable based on the selected role)
-      if (
-        (selectedRole === 'TEAM LEADER' || selectedRole === 'TEAM MEMBER') &&
-        !selectedTeam
-      ) {
-        setErrorMessage('Please select team.');
-        return false;
-      }
+    // Check if team is selected (if applicable based on the selected role)
+    if (
+      (selectedRole === ROLE.TEAM_LEADER ||
+        selectedRole === ROLE.TEAM_MEMBER) &&
+      !selectedTeam
+    ) {
+      setErrorMessage('Please select team.');
+      return false;
     }
 
     // Check if name,phone number, and email are filled
@@ -175,93 +187,99 @@ const EmployeeForm = ({route}: EmployeeFormProps) => {
           value={employeeData?.email ?? ''}
           keyboardType="email-address"
         />
-        {typeof index === 'undefined' && (
-          <ToggleButton
-            label="Add the member to department?"
-            isEnabled={isEnabled}
-            toggleSwitch={() => setIsEnabled(previousState => !previousState)}
+
+        <View style={styles.pickerContainer}>
+          <Text style={styles.label}>Department</Text>
+          <ModalSelector
+            data={departments.map(dep => ({key: dep, label: dep}))}
+            initValue={selectedDepartment || 'Select Department'}
+            disabled={
+              !addNewEmployee || fromScreen === EMPLOYEE_COMPONENT_SCREEN
+            }
+            onChange={option => {
+              setEmployeeData(prevData => ({
+                ...prevData,
+                department: option.key,
+                team: '',
+              }));
+              setSelectedDepartment(option.key);
+              if (addNewEmployee) {
+                setSelectedRole(null); // Reset
+                setSelectedTeam(null); // Reset
+              }
+            }}
+            style={styles.modalSelector}
+            selectStyle={styles.modalSelectorSelect}
           />
-        )}
-        {isEnabled && (
+        </View>
+        {selectedDepartment && (
           <>
-            <View style={styles.pickerContainer}>
-              <Text style={styles.label}>Department</Text>
-              <ModalSelector
-                data={departments.map(dep => ({key: dep, label: dep}))}
-                initValue={selectedDepartment || 'Select Department'}
-                disabled={typeof index !== 'undefined' ? true : false}
-                onChange={option => {
-                  setEmployeeData(prevData => ({
-                    ...prevData,
-                    department: option.key,
-                    team: '',
-                  }));
-                  setSelectedDepartment(option.key);
-                  if (typeof index === 'undefined') {
-                    setSelectedRole(null); // Reset
-                    setSelectedTeam(null); // Reset
-                  }
-                }}
-                style={styles.modalSelector}
-                selectStyle={styles.modalSelectorSelect}
-              />
-            </View>
-            {selectedDepartment && (
-              <>
+            {teamsForSelectedDepartment &&
+              teamsForSelectedDepartment.length > 0 &&
+              selectedRole !== ROLE.HEAD &&
+              selectedRole !== ROLE.CEO &&
+              selectedRole !== ROLE.TEAM && (
                 <View style={styles.pickerContainer}>
-                  <Text style={styles.label}>Role</Text>
+                  <Text style={styles.label}>Team</Text>
                   <ModalSelector
-                    data={roles.map(role => ({key: role, label: role}))}
-                    initValue={selectedRole || 'Select Role'}
-                    disabled={typeof index !== 'undefined' ? true : false}
+                    data={(teamsForSelectedDepartment || []).map(team => ({
+                      key: team,
+                      label: team,
+                    }))}
+                    disabled={
+                      !addNewEmployee ||
+                      fromScreen === EMPLOYEE_COMPONENT_SCREEN
+                    }
+                    initValue={selectedTeam || 'Select Team'}
                     onChange={option => {
                       setEmployeeData(prevData => ({
                         ...prevData,
-                        role: option.key,
+                        team: option.key,
                       }));
-                      setSelectedRole(option.key);
-                      if (typeof index === 'undefined') {
-                        setSelectedTeam(null); // Reset
+                      setSelectedTeam(option.key);
+                      if (addNewEmployee) {
+                        setSelectedRole(null); // Reset
                       }
                     }}
                     style={styles.modalSelector}
                     selectStyle={styles.modalSelectorSelect}
                   />
                 </View>
-                {(selectedRole === 'TEAM LEADER' ||
-                  selectedRole === 'TEAM MEMBER') && (
-                  <View style={styles.pickerContainer}>
-                    <Text style={styles.label}>Team</Text>
-                    <ModalSelector
-                      data={(teamsForSelectedDepartment || []).map(team => ({
-                        key: team,
-                        label: team,
-                      }))}
-                      disabled={typeof index !== 'undefined' ? true : false}
-                      initValue={selectedTeam || 'Select Team'}
-                      onChange={option => {
-                        setEmployeeData(prevData => ({
-                          ...prevData,
-                          team: option.key,
-                        }));
-                        setSelectedTeam(option.key);
-                      }}
-                      style={styles.modalSelector}
-                      selectStyle={styles.modalSelectorSelect}
-                    />
-                  </View>
-                )}
-              </>
-            )}
+              )}
+
+            {selectedTeam &&
+              selectedRole !== ROLE.HEAD &&
+              selectedRole !== ROLE.CEO &&
+              selectedRole !== ROLE.TEAM && (
+                <View style={styles.pickerContainer}>
+                  <Text style={styles.label}>Role</Text>
+                  <ModalSelector
+                    data={roles.map(role => ({key: role, label: role}))}
+                    initValue={selectedRole || 'Select Role'}
+                    disabled={
+                      !addNewEmployee ||
+                      fromScreen === EMPLOYEE_COMPONENT_SCREEN
+                    }
+                    onChange={option => {
+                      setEmployeeData(prevData => ({
+                        ...prevData,
+                        role: option.key,
+                      }));
+                      setSelectedRole(option.key);
+                    }}
+                    style={styles.modalSelector}
+                    selectStyle={styles.modalSelectorSelect}
+                  />
+                </View>
+              )}
           </>
         )}
-        {!isEnabled ||
-        (isEnabled &&
-          selectedDepartment &&
-          selectedRole &&
-          (selectedRole === ROLE.HEAD || selectedTeam)) ? (
+
+        {selectedDepartment &&
+        selectedRole &&
+        (selectedRole === ROLE.HEAD || selectedTeam) ? (
           <>
-            <Button title={title} onPress={handleAddTeamMember} />
+            <Button title={title} onPress={handleAddEmployee} />
           </>
         ) : null}
       </View>
@@ -314,4 +332,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {EmployeeForm};
+export {EmployeeFormScreen};

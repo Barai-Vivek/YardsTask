@@ -52,7 +52,6 @@ const {actions, reducer} = createSlice({
       if (indexes && indexes.length > 0) {
         if (indexes.length === 1) {
           //Edit CEO
-          console.log('Edit CEO');
         } else if (indexes.length === 2) {
           //Edit HEAD
           const [ceoIndex, headIndex] = indexes;
@@ -73,7 +72,7 @@ const {actions, reducer} = createSlice({
             ]?.children ?? [];
           teamLeaders[teamLeaderIndex] = updatedEmployee;
         } else if (indexes.length === 5) {
-          //Edit Team Member
+          //Edit Employee
           const [
             ceoIndex,
             headIndex,
@@ -92,7 +91,7 @@ const {actions, reducer} = createSlice({
     deleteEmployeeByIndex: (state, action: PayloadAction<UpdateEmployee>) => {
       const indexes = action.payload.indexes;
       if (indexes && indexes.length === 5) {
-        //Delete Team Member
+        //Delete Employee
         const [
           ceoIndex,
           headIndex,
@@ -115,10 +114,31 @@ const {actions, reducer} = createSlice({
         const [ceoIndex, headIndex] = indexes;
         const teams =
           state.employees[ceoIndex].children?.[headIndex].children ?? [];
-
-        console.log({data});
-
         teams.push(data);
+      }
+    },
+    addEmployeeByIndex: (state, action: PayloadAction<UpdateEmployee>) => {
+      const indexes = action.payload.indexes;
+      const employee = action.payload.employee;
+
+      if (indexes) {
+        if (indexes.length === 3) {
+          //Add Team Leader
+          const [ceoIndex, headIndex, teamIndex] = indexes;
+          const teamLeaders =
+            state.employees[ceoIndex]?.children?.[headIndex]?.children?.[
+              teamIndex
+            ]?.children ?? [];
+          teamLeaders.push(employee);
+        } else if (indexes.length === 4) {
+          const [ceoIndex, headIndex, teamIndex, teamLeaderIndex] = indexes;
+          //Add Employee
+          const teamMembers =
+            state.employees[ceoIndex]?.children?.[headIndex]?.children?.[
+              teamIndex
+            ]?.children?.[teamLeaderIndex]?.children ?? [];
+          teamMembers.push(employee);
+        }
       }
     },
   },

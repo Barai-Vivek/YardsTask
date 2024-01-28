@@ -1,9 +1,11 @@
 import {EmployeeData} from './screens/types';
 
+export const HOME_SCREEN = 'HOME_SCREEN';
+export const EMPLOYEE_COMPONENT_SCREEN = 'EMPLOYEE_COMPONENT_SCREEN';
 export const ADD_TEAM = 'Add Team';
 export const EDIT_TEAM = 'Edit Team';
-export const ADD_TEAM_MEMBER = 'Add Team Member';
-export const EDIT_TEAM_MEMBER = 'Edit Team Member';
+export const ADD_EMPLOYEE = 'Add Employee';
+export const EDIT_EMPLOYEE = 'Edit Employee';
 export const ALL_EMPLOYEES = 'All Employees';
 export const TEAM = 'Team';
 export const EMPLOYEES = 'Employees';
@@ -28,90 +30,6 @@ export enum ROLE {
 }
 
 export const roles: string[] = [ROLE.TEAM_LEADER, ROLE.TEAM_MEMBER];
-
-export const defaultEmployees: EmployeeData[] = [
-  {
-    role: ROLE.CEO,
-    name: 'Company CEO',
-    email: 'ceo@company.com',
-    phoneNumber: '1234567890',
-    id: '1',
-    children: [
-      {
-        role: ROLE.HEAD,
-        name: 'Name of staff/HR head',
-        email: 'hr@company.com',
-        phoneNumber: '3434534232',
-        id: '2',
-        department: DEPARTMENT.STAFF_HR,
-        children: [
-          {
-            role: ROLE.TEAM,
-            name: 'Team 1',
-            id: '3',
-            department: DEPARTMENT.STAFF_HR,
-            children: [],
-          },
-          {
-            role: ROLE.TEAM,
-            name: 'Team 2',
-            id: '4',
-            department: DEPARTMENT.STAFF_HR,
-            children: [],
-          },
-        ],
-      },
-      {
-        role: ROLE.HEAD,
-        name: 'Name of engineering head',
-        email: 'engineerhead@company.com',
-        phoneNumber: '324254',
-        id: '5',
-        department: DEPARTMENT.ENGINEERING,
-        children: [
-          {
-            role: ROLE.TEAM,
-            name: 'Team A',
-            id: '6',
-            department: DEPARTMENT.ENGINEERING,
-            children: [],
-          },
-          {
-            role: ROLE.TEAM,
-            name: 'Team B',
-            id: '7',
-            department: DEPARTMENT.ENGINEERING,
-            children: [],
-          },
-        ],
-      },
-      {
-        role: ROLE.HEAD,
-        name: 'Name of design head',
-        email: 'designhead@company.com',
-        phoneNumber: '32432452',
-        id: '8',
-        department: DEPARTMENT.DESIGN,
-        children: [
-          {
-            role: ROLE.TEAM,
-            name: 'Team X',
-            id: '9',
-            department: DEPARTMENT.DESIGN,
-            children: [],
-          },
-          {
-            role: ROLE.TEAM,
-            name: 'Team Y',
-            id: '10',
-            department: DEPARTMENT.DESIGN,
-            children: [],
-          },
-        ],
-      },
-    ],
-  },
-];
 
 export const generateUUID = (): string => {
   let d = new Date().getTime(); // Timestamp
@@ -138,6 +56,129 @@ export const generateUUID = (): string => {
     return (c === 'x' ? result : (result & 0x3) | 0x8).toString(16);
   });
 };
+
+export const defaultEmployees: EmployeeData[] = [
+  {
+    role: ROLE.CEO,
+    name: 'Company CEO',
+    email: 'ceo@company.com',
+    phoneNumber: '1234567890',
+    id: '1',
+    children: [
+      {
+        role: ROLE.HEAD,
+        name: 'Name of staff/HR head',
+        email: 'hr@company.com',
+        phoneNumber: '3434534232',
+        id: '2',
+        department: DEPARTMENT.STAFF_HR,
+        children: [],
+      },
+      {
+        role: ROLE.HEAD,
+        name: 'Name of engineering head',
+        email: 'engineerhead@company.com',
+        phoneNumber: '324254',
+        id: '5',
+        department: DEPARTMENT.ENGINEERING,
+        children: [],
+      },
+      {
+        role: ROLE.HEAD,
+        name: 'Name of design head',
+        email: 'designhead@company.com',
+        phoneNumber: '32432452',
+        id: '8',
+        department: DEPARTMENT.DESIGN,
+        children: [],
+      },
+    ],
+  },
+];
+
+// export const defaultEmployees: EmployeeData[] = [
+//   {
+//     role: ROLE.CEO,
+//     name: 'Company CEO',
+//     email: 'ceo@company.com',
+//     phoneNumber: '1234567890',
+//     id: '1',
+//     children: [
+//       {
+//         role: ROLE.HEAD,
+//         name: 'Name of staff/HR head',
+//         email: 'hr@company.com',
+//         phoneNumber: '3434534232',
+//         id: '2',
+//         department: DEPARTMENT.STAFF_HR,
+//         children: [
+//           {
+//             role: ROLE.TEAM,
+//             name: 'Team 1',
+//             id: '3',
+//             department: DEPARTMENT.STAFF_HR,
+//             children: [],
+//           },
+//           {
+//             role: ROLE.TEAM,
+//             name: 'Team 2',
+//             id: '4',
+//             department: DEPARTMENT.STAFF_HR,
+//             children: [],
+//           },
+//         ],
+//       },
+//       {
+//         role: ROLE.HEAD,
+//         name: 'Name of engineering head',
+//         email: 'engineerhead@company.com',
+//         phoneNumber: '324254',
+//         id: '5',
+//         department: DEPARTMENT.ENGINEERING,
+//         children: [
+//           {
+//             role: ROLE.TEAM,
+//             name: 'Team A',
+//             id: '6',
+//             department: DEPARTMENT.ENGINEERING,
+//             children: [],
+//           },
+//           {
+//             role: ROLE.TEAM,
+//             name: 'Team B',
+//             id: '7',
+//             department: DEPARTMENT.ENGINEERING,
+//             children: [],
+//           },
+//         ],
+//       },
+//       {
+//         role: ROLE.HEAD,
+//         name: 'Name of design head',
+//         email: 'designhead@company.com',
+//         phoneNumber: '32432452',
+//         id: '8',
+//         department: DEPARTMENT.DESIGN,
+//         children: [
+//           {
+//             role: ROLE.TEAM,
+//             name: 'Team X',
+//             id: '9',
+//             department: DEPARTMENT.DESIGN,
+//             children: [],
+//           },
+//           {
+//             role: ROLE.TEAM,
+//             name: 'Team Y',
+//             id: '10',
+//             department: DEPARTMENT.DESIGN,
+//             children: [],
+//           },
+//         ],
+//       },
+//     ],
+//   },
+// ];
 
 // export const employeeData: EmployeeData[] = [
 //   {

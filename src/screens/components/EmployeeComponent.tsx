@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {ROLE} from '../../Constants';
+import {EMPLOYEE_COMPONENT_SCREEN, ROLE} from '../../Constants';
 import {EmployeeData, EmployeeProps} from '../types';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationRoutes} from '../../Route';
@@ -25,18 +25,45 @@ const EmployeeComponent = ({
   const dispatch = useAppDispatch();
 
   // Define the function to navigate to another screen with data
-  const navigateToScreenWithData = (item: EmployeeData, position: number) => {
+  const navigateToScreenWithData = (item: EmployeeData) => {
     if (item.role === ROLE.TEAM) {
       navigation.navigate(NavigationRoutes.TEAM_FORM, {
         employee: item,
         indexes: indexes,
       });
     } else {
-      navigation.navigate(NavigationRoutes.ADD_TEAM_MEMBER, {
+      navigation.navigate(NavigationRoutes.ADD_EMPLOYEE, {
         employee: item,
         indexes: indexes,
+        addNewEmployee: false,
+        fromScreen: EMPLOYEE_COMPONENT_SCREEN,
       });
     }
+  };
+
+  const navigateToAddNewEmployee = (item: EmployeeData) => {
+    let newRole = ROLE.TEAM_MEMBER;
+    let team = item.team;
+    if (item.role === ROLE.TEAM) {
+      newRole = ROLE.TEAM_LEADER;
+      team = item.name;
+    }
+
+    const newEmployee: EmployeeData = {
+      id: '',
+      name: '',
+      role: newRole,
+      department: item.department,
+      team: team,
+      children: [],
+    };
+
+    navigation.navigate(NavigationRoutes.ADD_EMPLOYEE, {
+      employee: newEmployee,
+      indexes: indexes,
+      addNewEmployee: true,
+      fromScreen: EMPLOYEE_COMPONENT_SCREEN,
+    });
   };
 
   const deleteTeamMember = (item: EmployeeData, position: number[]) => {
@@ -55,6 +82,7 @@ const EmployeeComponent = ({
       id: '',
       department: item.department,
       role: ROLE.TEAM,
+      children: [],
     };
 
     navigation.navigate(NavigationRoutes.TEAM_FORM, {
@@ -98,22 +126,40 @@ const EmployeeComponent = ({
             onlyEmployees ? {marginBottom: 16} : null,
           ]}>
           <View style={{width: '90%'}}>
-            <Text style={styles.label}>{`Position: ${employee.role}`}</Text>
-            <Text
-              style={styles.label}>{`Employee name: ${employee.name}`}</Text>
+            {(employee.role !== ROLE.TEAM && (
+              <>
+                <Text style={styles.label}>{`Position: ${employee.role}`}</Text>
+                <Text
+                  style={
+                    styles.label
+                  }>{`Employee name: ${employee.name}`}</Text>
+              </>
+            )) || (
+              <>
+                <Text style={styles.label}>{employee.name}</Text>
+              </>
+            )}
           </View>
           {employee.role !== ROLE.CEO && (
             <View style={{flex: 1, justifyContent: 'space-between', margin: 6}}>
               <TouchableOpacity
-                onPress={() => navigateToScreenWithData(employee, index)}>
+                onPress={() => navigateToScreenWithData(employee)}>
                 <Image
                   source={Images.icEdit}
                   tintColor={'black'}
                   style={styles.imageSize}
                 />
               </TouchableOpacity>
-              {employee.role === ROLE.HEAD && (
-                <TouchableOpacity onPress={() => addTeam(employee, indexes)}>
+              {(employee.role === ROLE.HEAD ||
+                (employee.role === ROLE.TEAM &&
+                  (employee.children ?? []).length === 0) ||
+                employee.role === ROLE.TEAM_LEADER) && (
+                <TouchableOpacity
+                  onPress={() =>
+                    employee.role === ROLE.HEAD
+                      ? addTeam(employee, indexes)
+                      : navigateToAddNewEmployee(employee)
+                  }>
                   <Image
                     source={Images.icAdd}
                     tintColor={'black'}

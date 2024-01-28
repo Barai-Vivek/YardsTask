@@ -1,3 +1,4 @@
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useState, useEffect} from 'react';
 import {
@@ -19,7 +20,12 @@ import {
   EDIT_TEAM,
 } from '..';
 import {EmployeeData, initialEmployeeData} from './types';
-import {hierarchyActions, useAppDispatch} from '../redux';
+import {
+  hierarchyActions,
+  selectAllTeamNames,
+  useAppDispatch,
+  useAppSelector,
+} from '../redux';
 
 const TeamFormScreen = ({route}: TeamProps) => {
   const employee = route.params?.employee;
@@ -27,8 +33,6 @@ const TeamFormScreen = ({route}: TeamProps) => {
   const addTeam = route.params?.addTeam;
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
-
-  console.log({index});
 
   const title = addTeam ? ADD_TEAM : EDIT_TEAM;
 
@@ -39,12 +43,11 @@ const TeamFormScreen = ({route}: TeamProps) => {
     employee?.department ?? null,
   );
   const selectedRole = ROLE.TEAM;
-  // const [selectedTeam, setSelectedTeam] = useState<string | null>(
-  //   employee?.team ?? null,
-  // );
 
   const [showError, setShowError] = useState(false);
   const [errMessage, setErrorMessage] = useState('');
+
+  const teamsName = useAppSelector(selectAllTeamNames);
 
   useEffect(() => {
     setShowError(false);
@@ -55,7 +58,7 @@ const TeamFormScreen = ({route}: TeamProps) => {
     setEmployeeData(prevData => ({...prevData, [field]: value}));
   };
 
-  const handleAddTeamMember = () => {
+  const handleAddTeam = () => {
     setShowError(false);
     if (isFormValid()) {
       // Implement logic to add the team
@@ -98,6 +101,15 @@ const TeamFormScreen = ({route}: TeamProps) => {
     // Check if name,phone number, and email are filled
     if (!employeeData.name) {
       setErrorMessage('Please fill out all required fields correctly.');
+      return false;
+    }
+
+    const isNameIncluded = teamsName.some(
+      name => name.toLowerCase() === employeeData.name.toLowerCase(),
+    );
+
+    if (isNameIncluded) {
+      setErrorMessage('Team name already exists');
       return false;
     }
     return true;
@@ -154,7 +166,7 @@ const TeamFormScreen = ({route}: TeamProps) => {
         )}
         {selectedDepartment && selectedRole ? (
           <>
-            <Button title={title} onPress={handleAddTeamMember} />
+            <Button title={title} onPress={handleAddTeam} />
           </>
         ) : null}
       </View>

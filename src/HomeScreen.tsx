@@ -1,14 +1,15 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
-  ADD_TEAM_MEMBER,
+  ADD_EMPLOYEE,
   ALL_EMPLOYEES,
   EMPLOYEES,
   FilteredEmployeesScreen,
   HierarchyScreen,
   TEAM,
   TeamFormScreen,
-  EmployeeForm,
+  EmployeeFormScreen,
+  HOME_SCREEN,
 } from '.';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationRoutes, TabStackParamList} from './Route';
@@ -20,9 +21,14 @@ const Stack = createNativeStackNavigator<TabStackParamList>();
 const HomeScreen = () => {
   const navigation = useNavigation();
 
-  const handleAddTeamMember = () => {
+  const handleAddEmployee = () => {
     // Navigate to the EmployeeForm screen
-    navigation.navigate(NavigationRoutes.ADD_TEAM_MEMBER as never);
+    navigation.navigate(NavigationRoutes.ADD_EMPLOYEE, {
+      employee: undefined,
+      indexes: [],
+      addNewEmployee: true,
+      fromScreen: HOME_SCREEN,
+    });
   };
 
   return (
@@ -39,7 +45,7 @@ const HomeScreen = () => {
           headerTitle: EMPLOYEES,
           headerTitleAlign: 'center',
           headerRight: () => (
-            <TouchableOpacity onPress={handleAddTeamMember}>
+            <TouchableOpacity onPress={handleAddEmployee}>
               <Image
                 source={Images.icAdd}
                 tintColor={'white'}
@@ -50,10 +56,10 @@ const HomeScreen = () => {
         }}
       />
       <Stack.Screen
-        name={NavigationRoutes.ADD_TEAM_MEMBER}
-        component={EmployeeForm}
+        name={NavigationRoutes.ADD_EMPLOYEE}
+        component={EmployeeFormScreen}
         options={{
-          headerTitle: ADD_TEAM_MEMBER,
+          headerTitle: ADD_EMPLOYEE,
           headerTitleAlign: 'center',
         }}
       />

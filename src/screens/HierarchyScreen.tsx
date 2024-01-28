@@ -9,13 +9,13 @@ const HierarchyScreen = () => {
   const employeesData = useAppSelector(selectEmployeeData);
   const navigation = useNavigation();
 
-  const navigateToAllMembersScreen = () => {
+  const navigateToAllEmployeesScreen = () => {
     navigation.navigate(NavigationRoutes.FILTERED_EMPLOYEES as never);
   };
 
   return (
     <View style={styles.container}>
-      <Button title="All Employees" onPress={navigateToAllMembersScreen} />
+      <Button title="All Employees" onPress={navigateToAllEmployeesScreen} />
 
       <FlatList
         data={employeesData}
