@@ -87,13 +87,13 @@ const TeamFormScreen = ({route, navigation}: TeamProps) => {
       // Implement logic to add the team
       if (addTeam) {
         teamData.id = generateUUID();
-        navigateToAddNewEmployee(teamData);
-        // dispatch(
-        //   hierarchyActions.addTeam({
-        //     employee: teamData,
-        //     indexes: index,
-        //   }),
-        // );
+        //navigateToAddNewEmployee(teamData);
+        dispatch(
+          hierarchyActions.addTeam({
+            employee: teamData,
+            indexes: index,
+          }),
+        );
       } else {
         //you are editing some data
         dispatch(
