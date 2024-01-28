@@ -29,12 +29,12 @@ import {
   useAppSelector,
 } from '../redux';
 
-const TeamFormScreen = ({route, navigation}: TeamProps) => {
+const TeamFormScreen = ({route}: TeamProps) => {
   const employee = route.params?.employee;
   const index = route.params?.indexes;
   const addTeam = route.params?.addTeam;
   const dispatch = useAppDispatch();
-  //const navigation = useAppNavigation();
+  const navigation = useAppNavigation();
 
   const title = addTeam ? ADD_TEAM : EDIT_TEAM;
 
@@ -60,7 +60,7 @@ const TeamFormScreen = ({route, navigation}: TeamProps) => {
     setTeamData(prevData => ({...prevData, [field]: value}));
   };
 
-  const navigateToAddNewEmployee = (teamData: EmployeeData) => {
+  const navigateToAddNewEmployee = () => {
     const newEmployee: EmployeeData = {
       id: '',
       name: '',
@@ -69,15 +69,13 @@ const TeamFormScreen = ({route, navigation}: TeamProps) => {
       team: teamData.name,
       children: [],
     };
-    const indexes = [...(index ?? []), 0];
-
-    console.log({newEmployee});
 
     navigation.navigate(NavigationRoutes.ADD_EMPLOYEE, {
       employee: newEmployee,
-      indexes: indexes,
+      indexes: index,
       addNewEmployee: true,
       fromScreen: TEAM_FORM_SCREEN,
+      teamData: teamData,
     });
   };
 
@@ -87,13 +85,7 @@ const TeamFormScreen = ({route, navigation}: TeamProps) => {
       // Implement logic to add the team
       if (addTeam) {
         teamData.id = generateUUID();
-        //navigateToAddNewEmployee(teamData);
-        dispatch(
-          hierarchyActions.addTeam({
-            employee: teamData,
-            indexes: index,
-          }),
-        );
+        navigateToAddNewEmployee();
       } else {
         //you are editing some data
         dispatch(
@@ -102,8 +94,8 @@ const TeamFormScreen = ({route, navigation}: TeamProps) => {
             indexes: index,
           }),
         );
+        navigation.goBack();
       }
-      navigation.goBack();
     } else {
       setShowError(true);
     }
@@ -189,9 +181,7 @@ const TeamFormScreen = ({route, navigation}: TeamProps) => {
           </>
         )}
         {selectedDepartment && selectedRole ? (
-          <>
-            <Button title={title} onPress={handleAddTeam} />
-          </>
+          <Button title={title} onPress={handleAddTeam} />
         ) : null}
       </View>
     </ScrollView>

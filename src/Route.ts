@@ -7,6 +7,7 @@ export type AddEmployeeParams = {
   indexes?: number[];
   addNewEmployee: boolean;
   fromScreen: string;
+  teamData?: EmployeeData;
 };
 
 export type AddTeamParams = {
@@ -38,6 +39,10 @@ type EmployeeFormRouteProp = RouteProp<
 
 export type EmployeeFormProps = {
   route: EmployeeFormRouteProp;
+  navigation: StackNavigationProp<
+    NavigationStackParamList,
+    NavigationRoutes.ADD_EMPLOYEE
+  >;
 };
 
 type TeamFormRouteProp = RouteProp<

@@ -11,7 +11,13 @@ import {EMPLOYEE_COMPONENT_SCREEN, ROLE} from '../../Constants';
 import {EmployeeData, EmployeeProps} from '../types';
 import {NavigationRoutes} from '../../Route';
 import {Images} from '../../assets';
-import {hierarchyActions, useAppDispatch, useAppNavigation} from '../../redux';
+import {
+  hierarchyActions,
+  selectAllowDeleteTeamMember,
+  useAppDispatch,
+  useAppNavigation,
+  useAppSelector,
+} from '../../redux';
 
 const EmployeeComponent = ({
   employee,
@@ -65,6 +71,13 @@ const EmployeeComponent = ({
       fromScreen: EMPLOYEE_COMPONENT_SCREEN,
     });
   };
+
+  const checkThisAllow =
+    employee.role === ROLE.TEAM_MEMBER
+      ? useAppSelector(
+          selectAllowDeleteTeamMember(employee.department, employee.team),
+        )
+      : false;
 
   const deleteTeamMember = (item: EmployeeData, position: number[]) => {
     dispatch(
@@ -168,7 +181,7 @@ const EmployeeComponent = ({
                   />
                 </TouchableOpacity>
               )}
-              {employee.role === ROLE.TEAM_MEMBER && (
+              {checkThisAllow && employee.role === ROLE.TEAM_MEMBER && (
                 <TouchableOpacity
                   onPress={() => deleteTeamMember(employee, indexes)}>
                   <Image

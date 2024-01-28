@@ -113,3 +113,40 @@ export const selectDepartmentTeams = (department?: string) =>
     // Check if there is at least one team in particular department
     return departmentHead.children.some(team => team.role === ROLE.TEAM);
   });
+
+export const selectAllowDeleteTeamMember = (
+  department?: string,
+  teamName?: string,
+) =>
+  createSelector(teamState, state => {
+    const employees = state.employees;
+    if (!department || !teamName) {
+      return false; // If either department or teamName is not provided, return false
+    }
+
+    const ceo = employees.find(employee => employee.role === ROLE.CEO);
+    if (!ceo) {
+      return false;
+    }
+
+    const departmentHead = ceo.children?.find(
+      child => child.department === department && child.role === ROLE.HEAD,
+    );
+    if (!departmentHead) {
+      return false;
+    }
+
+    const team = departmentHead.children?.find(team => team.name === teamName);
+
+    if (!team || !team.children) {
+      return false;
+    }
+
+    const teamLeader = team.children[0];
+    if (!teamLeader || !teamLeader.children) {
+      return false;
+    }
+
+    // Check if there is at least one team leader in the team
+    return teamLeader.children.length > 1;
+  });

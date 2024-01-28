@@ -20,10 +20,6 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
-// const store = configureStore({
-//   reducer: rootReducer,
-// });
-
 export const setupStore = () => {
   return configureStore({
     reducer: rootReducer,

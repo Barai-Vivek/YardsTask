@@ -12,6 +12,7 @@ import {
   ADD_EMPLOYEE,
   EDIT_EMPLOYEE,
   EMPLOYEE_COMPONENT_SCREEN,
+  HOME_SCREEN,
   ROLE,
   TEAM_FORM_SCREEN,
   departments,
@@ -30,18 +31,17 @@ import {
   selectTeamData,
   selectTeamLeader,
   useAppDispatch,
-  useAppNavigation,
   useAppSelector,
 } from '../redux';
 
-const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
+const EmployeeFormScreen = ({route, navigation}: EmployeeFormProps) => {
   const employee = route.params?.employee;
   const index = route.params?.indexes;
   const addNewEmployee = route.params?.addNewEmployee;
   const fromScreen = route.params?.fromScreen;
+  const teamData = route.params?.teamData;
 
   const dispatch = useAppDispatch();
-  const navigation = useAppNavigation();
 
   const title = addNewEmployee ? ADD_EMPLOYEE : EDIT_EMPLOYEE;
 
@@ -61,22 +61,27 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
   const [errMessage, setErrorMessage] = useState('');
 
   const [editTeamIndex, setEditTeamIndex] = useState<number[]>([]);
-  const [newTeamLeader, setNewTeamLeader] = useState({});
+  const [newTeamLeader, setNewTeamLeader] = useState<any>(null);
   const [newTeamLeaderIndexes, setNewTeamLeaderIndexes] = useState<number[]>(
     [],
   );
 
   // Selector to get teams based on selected department
-  const teamsForSelectedDepartment = useAppSelector(
-    selectTeamData(selectedDepartment ?? ''),
-  );
+  const teamsForSelectedDepartment =
+    fromScreen === TEAM_FORM_SCREEN
+      ? [teamData!.name]
+      : useAppSelector(selectTeamData(selectedDepartment ?? ''));
 
   const teamLeaderExists = useAppSelector(
     selectTeamLeader(selectedDepartment ?? '', selectedTeam ?? ''),
   );
 
   useEffect(() => {
-    if (selectedDepartment && teamsForSelectedDepartment?.length === 0) {
+    if (
+      selectedDepartment &&
+      fromScreen !== TEAM_FORM_SCREEN &&
+      teamsForSelectedDepartment?.length === 0
+    ) {
       setErrorMessage(`There is no teams in ${selectedDepartment}`);
       setShowError(true);
     } else {
@@ -89,6 +94,34 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
     setEmployeeData(prevData => ({...prevData, [field]: value}));
   };
 
+  const handleAddTeamAndEmployee = async () => {
+    //Add Team at index
+    await dispatch(
+      hierarchyActions.addTeam({
+        employee: teamData!,
+        indexes: index,
+      }),
+    );
+
+    //Add Team leader at index
+    await dispatch(
+      hierarchyActions.addEmployeeByIndex({
+        employee: newTeamLeader,
+        indexes: newTeamLeaderIndexes,
+      }),
+    );
+
+    const newTeamMemberIndex = [...(newTeamLeaderIndexes ?? []), 0];
+    await dispatch(
+      hierarchyActions.addEmployeeByIndex({
+        employee: employeeData,
+        indexes: newTeamMemberIndex,
+      }),
+    );
+
+    navigation.pop(2);
+  };
+
   const handleAddEmployee = () => {
     setShowError(false);
     if (isFormValid()) {
@@ -99,21 +132,21 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
           setShowError(true);
         } else if (
           !teamLeaderExists &&
+          fromScreen !== TEAM_FORM_SCREEN &&
           employeeData.role === ROLE.TEAM_MEMBER
         ) {
           setErrorMessage('There should be alteast 1 Team Leader in team');
           setShowError(true);
         } else {
           employeeData.id = generateUUID();
-
           if (fromScreen === TEAM_FORM_SCREEN) {
             if (!newTeamLeader) {
-              setNewTeamLeaderIndexes(index ?? []);
-              setNewTeamLeader({
-                employee: employeeData,
-                indexes: index,
-              });
+              const newTeamLeaderIndex = [...(index ?? []), 0];
+              employeeData.children = [];
+              setNewTeamLeaderIndexes(newTeamLeaderIndex ?? []);
+              setNewTeamLeader(employeeData);
 
+              // Reset the form after adding the team member
               const newEmployee: EmployeeData = {
                 id: '',
                 name: '',
@@ -122,12 +155,12 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
                 team: employeeData.team,
                 children: [],
               };
-
-              // Reset the form after adding the team member
-              setEmployeeData(initialEmployeeData);
-              setSelectedDepartment(null);
-              setSelectedRole(null);
-              setSelectedTeam(null);
+              setEmployeeData(newEmployee);
+              setSelectedDepartment(employeeData.department ?? '');
+              setSelectedRole(ROLE.TEAM_MEMBER);
+              setSelectedTeam(employeeData.team ?? '');
+            } else if (newTeamLeader && teamData) {
+              handleAddTeamAndEmployee();
             }
           } else if (fromScreen === EMPLOYEE_COMPONENT_SCREEN) {
             dispatch(
@@ -226,12 +259,14 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
         <TextInput
           style={styles.input}
           placeholder="Name"
+          defaultValue="te"
           onChangeText={value => handleInputChange('name', value)}
           value={employeeData?.name ?? ''}
         />
         <TextInput
           style={styles.input}
           placeholder="Phone Number"
+          defaultValue="a"
           onChangeText={value => handleInputChange('phoneNumber', value)}
           value={employeeData?.phoneNumber ?? ''}
           keyboardType="phone-pad"
@@ -239,6 +274,7 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
         <TextInput
           style={styles.input}
           placeholder="Email"
+          defaultValue="as@c.xom"
           onChangeText={value => handleInputChange('email', value)}
           value={employeeData?.email ?? ''}
           keyboardType="email-address"
@@ -283,9 +319,11 @@ const EmployeeFormScreen = ({route}: EmployeeFormProps) => {
                         keyIndex: index,
                       }),
                     )}
-                    // disabled={
-                    //   !addNewEmployee || fromScreen === TEAM_FORM_SCREEN
-                    // }
+                    disabled={
+                      fromScreen === TEAM_FORM_SCREEN ||
+                      (fromScreen === EMPLOYEE_COMPONENT_SCREEN &&
+                        employee?.role !== ROLE.TEAM_MEMBER)
+                    }
                     initValue={selectedTeam || 'Select Team'}
                     onChange={option => {
                       if (index && index.length >= 3) {

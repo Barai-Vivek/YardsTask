@@ -25,7 +25,7 @@ const HomeScreen = () => {
     // Navigate to the EmployeeForm screen
     navigation.navigate(NavigationRoutes.ADD_EMPLOYEE, {
       employee: undefined,
-      indexes: [],
+      indexes: undefined,
       addNewEmployee: true,
       fromScreen: HOME_SCREEN,
     });

@@ -15,6 +15,9 @@ const {actions, reducer} = createSlice({
   name: TEAM,
   initialState: initialState,
   reducers: {
+    resetAllData: state => {
+      state.employees = defaultEmployees;
+    },
     addEmployee: (state, action: PayloadAction<EmployeeData>) => {
       const data = action.payload;
       const role = data.role ?? '';
@@ -145,7 +148,7 @@ const {actions, reducer} = createSlice({
       const employee = action.payload.employee;
 
       if (indexes) {
-        if (indexes.length === 3) {
+        if (indexes.length === 3 && employee.role === ROLE.TEAM_LEADER) {
           //Add Team Leader
           const [ceoIndex, headIndex, teamIndex] = indexes;
           const teamLeaders =
@@ -153,7 +156,7 @@ const {actions, reducer} = createSlice({
               teamIndex
             ]?.children ?? [];
           teamLeaders.push(employee);
-        } else if (indexes.length === 4) {
+        } else if (indexes.length === 4 && employee.role === ROLE.TEAM_MEMBER) {
           const [ceoIndex, headIndex, teamIndex, teamLeaderIndex] = indexes;
           //Add Employee
           const teamMembers =
@@ -171,50 +174,3 @@ export const hierarchyActions = {
   ...actions,
 };
 export const hierarchyReducer = reducer;
-
-// editEmployee: (state, action: PayloadAction<UpdateEmployee>) => {
-//   const updatedEmployee = action.payload.employee;
-//   const indexes = action.payload.indexes;
-//     // Find the employee to edit
-//     const findAndEditEmployee = (
-//       employees: EmployeeData[],
-//       targetId: string,
-//     ): void => {
-//       for (const employee of employees) {
-//         if (employee.id === updatedEmployee.id) {
-//           // Update the employee's fields
-//           employee.name = updatedEmployee.name;
-//           employee.email = updatedEmployee.email;
-//           employee.phoneNumber = updatedEmployee.phoneNumber;
-//           // Update other fields as needed
-
-//           // Return once the employee is updated
-//           return;
-//         }
-
-//         // Recursively search in children if present
-//         if (employee.children) {
-//           findAndEditEmployee(employee.children, targetId);
-//         }
-//       }
-//     };
-//     // Start the search from the top level
-//     findAndEditEmployee(state.employees, updatedEmployee.id);
-//
-// },
-// deleteEmployee: (state, action: PayloadAction<UpdateEmployee>) => {
-//   const data = action.payload.employee;
-//   const indexes = action.payload.indexes;
-//     const updatedEmployees = [...state.employees];
-
-//     const findAndDelete = (employee: EmployeeData) => {
-//       if (employee.children) {
-//         employee.children = employee.children.filter(
-//           child => child.id !== data.id,
-//         );
-//         employee.children.forEach(child => findAndDelete(child));
-//       }
-//     };
-//     updatedEmployees.forEach(employee => findAndDelete(employee));
-//     state.employees = updatedEmployees;
-// },
