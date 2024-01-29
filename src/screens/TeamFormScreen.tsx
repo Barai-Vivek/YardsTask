@@ -141,6 +141,8 @@ const TeamFormScreen = ({route}: TeamProps) => {
           placeholder="Name"
           onChangeText={value => handleInputChange('name', value)}
           value={teamData?.name ?? ''}
+          placeholderTextColor="gray"
+          cursorColor={'gray'}
         />
         <View style={styles.pickerContainer}>
           <Text style={styles.label}>Department</Text>
@@ -156,6 +158,7 @@ const TeamFormScreen = ({route}: TeamProps) => {
               }));
               setSelectedDepartment(option.key);
             }}
+            initValueTextStyle={styles.modalSelectorSelectedLabel}
             style={styles.modalSelector}
             selectStyle={styles.modalSelectorSelect}
           />
@@ -174,6 +177,7 @@ const TeamFormScreen = ({route}: TeamProps) => {
                     role: option.key,
                   }));
                 }}
+                initValueTextStyle={styles.modalSelectorSelectedLabel}
                 style={styles.modalSelector}
                 selectStyle={styles.modalSelectorSelect}
               />
@@ -199,6 +203,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
     textAlign: 'center',
+    color: 'black',
   },
   input: {
     height: 40,
@@ -207,10 +212,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 8,
     borderRadius: 8,
+    color: 'black',
   },
   label: {
     fontSize: 16,
     marginBottom: 4,
+    color: 'gray',
   },
   pickerContainer: {
     marginBottom: 12,
@@ -230,6 +237,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: 'red',
     textAlign: 'left',
+  },
+  modalSelectorSelectedLabel: {
+    color: 'black',
   },
 });
 

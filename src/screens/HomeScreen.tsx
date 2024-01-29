@@ -2,19 +2,19 @@ import React from 'react';
 import {
   ADD_EMPLOYEE,
   ALL_EMPLOYEES,
-  EMPLOYEES,
+  HIERARCHY,
   FilteredEmployeesScreen,
   HierarchyScreen,
   TEAM,
   TeamFormScreen,
   EmployeeFormScreen,
   HOME_SCREEN,
-} from '.';
+} from '..';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-import {NavigationRoutes, NavigationStackParamList} from './Route';
-import {Images} from './assets';
+import {NavigationRoutes, NavigationStackParamList} from '../Route';
+import {Images} from '../assets';
 import {createStackNavigator} from '@react-navigation/stack';
-import {useAppNavigation} from './redux';
+import {useAppNavigation} from '../redux';
 
 const Stack = createStackNavigator<NavigationStackParamList>();
 
@@ -42,7 +42,7 @@ const HomeScreen = () => {
         name={NavigationRoutes.EMPLOYEES}
         component={HierarchyScreen}
         options={{
-          headerTitle: EMPLOYEES,
+          headerTitle: HIERARCHY,
           headerTitleAlign: 'center',
           headerRight: () => (
             <TouchableOpacity onPress={handleAddEmployee}>

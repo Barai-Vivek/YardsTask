@@ -248,6 +248,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderColor: 'grey',
     padding: 6,
+    color: 'black',
   },
   children: {
     marginLeft: 16,

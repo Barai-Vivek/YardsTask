@@ -12,7 +12,6 @@ import {
   ADD_EMPLOYEE,
   EDIT_EMPLOYEE,
   EMPLOYEE_COMPONENT_SCREEN,
-  HOME_SCREEN,
   ROLE,
   TEAM_FORM_SCREEN,
   departments,
@@ -259,33 +258,36 @@ const EmployeeFormScreen = ({route, navigation}: EmployeeFormProps) => {
         <TextInput
           style={styles.input}
           placeholder="Name"
-          defaultValue="te"
           onChangeText={value => handleInputChange('name', value)}
           value={employeeData?.name ?? ''}
+          placeholderTextColor="gray"
+          cursorColor={'gray'}
         />
         <TextInput
           style={styles.input}
           placeholder="Phone Number"
-          defaultValue="a"
           onChangeText={value => handleInputChange('phoneNumber', value)}
           value={employeeData?.phoneNumber ?? ''}
           keyboardType="phone-pad"
+          placeholderTextColor="gray"
+          cursorColor={'gray'}
         />
         <TextInput
           style={styles.input}
           placeholder="Email"
-          defaultValue="as@c.xom"
           onChangeText={value => handleInputChange('email', value)}
           value={employeeData?.email ?? ''}
           keyboardType="email-address"
+          placeholderTextColor="gray"
+          cursorColor={'gray'}
         />
-
         <View style={styles.pickerContainer}>
           <Text style={styles.label}>Department</Text>
           <ModalSelector
             data={departments.map(dep => ({key: dep, label: dep}))}
             initValue={selectedDepartment || 'Select Department'}
             disabled={disableModalSelector()}
+            initValueTextStyle={styles.modalSelectorSelectedLabel}
             onChange={option => {
               setEmployeeData(prevData => ({
                 ...prevData,
@@ -340,6 +342,7 @@ const EmployeeFormScreen = ({route, navigation}: EmployeeFormProps) => {
                         setSelectedRole(null); // Reset
                       }
                     }}
+                    initValueTextStyle={styles.modalSelectorSelectedLabel}
                     style={styles.modalSelector}
                     selectStyle={styles.modalSelectorSelect}
                   />
@@ -363,6 +366,7 @@ const EmployeeFormScreen = ({route, navigation}: EmployeeFormProps) => {
                       }));
                       setSelectedRole(option.key);
                     }}
+                    initValueTextStyle={styles.modalSelectorSelectedLabel}
                     style={styles.modalSelector}
                     selectStyle={styles.modalSelectorSelect}
                   />
@@ -394,6 +398,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
     textAlign: 'center',
+    color: 'black',
   },
   input: {
     height: 40,
@@ -402,10 +407,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     padding: 8,
     borderRadius: 8,
+    color: 'black',
   },
   label: {
     fontSize: 16,
     marginBottom: 4,
+    color: 'gray',
   },
   pickerContainer: {
     marginBottom: 12,
@@ -425,6 +432,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: 'red',
     textAlign: 'left',
+  },
+  modalSelectorSelectedLabel: {
+    color: 'black',
   },
 });
 

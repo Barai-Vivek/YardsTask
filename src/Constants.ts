@@ -9,7 +9,7 @@ export const ADD_EMPLOYEE = 'Add Employee';
 export const EDIT_EMPLOYEE = 'Edit Employee';
 export const ALL_EMPLOYEES = 'All Employees';
 export const TEAM = 'Team';
-export const EMPLOYEES = 'Employees';
+export const HIERARCHY = 'Hierarchy';
 
 export enum DEPARTMENT {
   STAFF_HR = 'staff/HR',

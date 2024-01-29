@@ -244,11 +244,10 @@ The project includes the following component:
       - EmployeeFromScreen.tsx
       - FilteredEmployeesScreen.tsx
       - HierarchyScreen.tsx
+      - HomeScreen.tsx
       - TeamFormScreen.tsx
       - types.ts
     - App.tsx
     - Constants.ts
-    - HomeScreen.tsx
     - Index.ts
     - Route.ts
-
