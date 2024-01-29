@@ -9,6 +9,7 @@ Brief description of the project.
 3. [Screens](#screens)
 4. [Components](#components)
 5. [Project Structure](#project-structure)
+6. [Functionality](#functionality)
 
 ## Dependency Used
 
@@ -251,3 +252,19 @@ The project includes the following component:
     - Constants.ts
     - Index.ts
     - Route.ts
+   
+## Functionality
+
+The project contains the following functionalities:
+
+- We should be able to see the position name with the employee name.
+- We should be able to add a new team member.
+- We should be able to change the team of a team member. An employee from HR can't
+be moved to the design team.
+- We can remove a team member.
+- We should be able to update employee information.
+- We should be able to create a new Team or edit an existing one.
+- Search Filter an employee by Employee Name, Phone Number, and Email ID.
+- Two teams cannot have the same name.
+  
+
