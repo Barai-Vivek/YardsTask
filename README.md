@@ -1,6 +1,30 @@
 # Yards Task
 
-Brief description of the project.
+Hierarchical UI for a company that shows all the employees.
+Hierarchy
+```
+|— CEO
+  |— Head of staff/HR
+    |—Team 1
+      |— Team leader
+        |— Team member
+    |—Team 2
+      |— Team leader
+        |— Team member
+  |— Head of engineering
+    |—Team
+        |— Team leader
+          |— Team member
+  |— Head of design
+    |—Team
+        |— Team leader
+          |— Team member
+```
+
+**Note:** Under each Head, there can be multiple Teams. Each team will have a team leader Under each Team leader, there should be at least one team member.
+
+**Details you need to store for each employee.**
+- Name, ID, Phone Number, Email ID
 
 ## Table of Contents
 
